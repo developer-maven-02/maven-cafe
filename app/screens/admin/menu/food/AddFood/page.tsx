@@ -147,7 +147,7 @@ export default function AddFood() {
             {/* ✅ Display preview if selected, otherwise show existing image */}
             {(preview || image) && (
               <img
-                src={preview || image}
+                src={preview || image || ""}
                 className="mt-3 w-full h-40 object-cover rounded-lg"
               />
             )}
