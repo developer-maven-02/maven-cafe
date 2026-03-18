@@ -124,7 +124,7 @@ const handleSubmit = async () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="w-full border border-gray-200 rounded-lg p-3 text-sm outline-none focus:border-[#103c7f]"
-            rows="4"
+            rows={4}
           />
 
         </div>
