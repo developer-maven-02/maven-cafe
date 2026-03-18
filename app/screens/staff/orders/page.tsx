@@ -13,7 +13,7 @@ type Order = {
   seat: string;
   notes: string;
   category: string;
-  rejectedx_reason?: string;
+  rejected_reason?: string;
   status: string;
 };
 
