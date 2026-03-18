@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase-server";
-export const config = { api: { bodyParser: false } };
 
 // ✅ GET single item
 export async function GET(
