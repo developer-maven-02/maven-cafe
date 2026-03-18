@@ -1,11 +1,19 @@
 // sendTestNotification.ts
 import admin from "firebase-admin";
-import serviceAccount from "./serviceAccountKey.json" assert { type: "json" };
 
 // Initialize Firebase admin SDK
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+    }),
+  });
+}
+
+
+
 
 // Replace this with the FCM token you got from your client device
 const FCM_TOKEN = "cjKkyLuzd3k1btAKFipfXk:APA91bFPopeT5KQ-egsK1SYd0XG2StocSHTvSYpU5nLtNsaEY6MwN-BTmSDIxODsROJZuq15PPTqbUm7PNfJm6iDklFW4oTJDuRid9V8cNMfOBdutChp3MI";

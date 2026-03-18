@@ -94,14 +94,20 @@ import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase-server";
 import { verifyToken } from "@/lib/auth";
 import admin from "firebase-admin";
-import serviceAccount from "@/lib/serviceAccountKey.json" assert { type: "json" };
 
 // Initialize Firebase Admin only once
+
+
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+    }),
   });
 }
+
 
 // Replace this with all active staff FCM tokens (store in DB in production)
 const STAFF_FCM_TOKENS = [

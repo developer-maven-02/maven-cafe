@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
 import admin from "firebase-admin";
-import serviceAccount from "@/lib/serviceAccountKey.json" assert { type: "json" };
 
 // Initialize Firebase Admin only once
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+    }),
   });
 }
+
 
 // Replace this with your browser FCM token
 const FCM_TOKEN = "cjKkyLuzd3k1btAKFipfXk:APA91bF7ubf0EQNrywH2R4x9Tf1zmfsIzs0gB3C1l7QHeAGIcm8d1rb-PVgv4G46L0cC_8quqtRJkF2lDOgf4v-mQ9fhICAfNN6wwlOFe7UrKzMknB9hAVA";
