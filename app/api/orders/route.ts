@@ -188,7 +188,7 @@ export async function POST(req: Request) {
         data: { orderId: data.id.toString() },
       };
 
-      const fcmResponse = await admin.messaging().sendMulticast(message);
+      const fcmResponse = await admin.messaging().sendEachForMulticast(message);;
       console.log("Notification sent:", fcmResponse);
     } catch (fcmError) {
       console.error("FCM error:", fcmError);

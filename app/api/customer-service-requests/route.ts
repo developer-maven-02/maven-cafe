@@ -136,8 +136,7 @@ const tokens = staffTokens?.map((t) => t.fcm_token).filter(Boolean) || [];
         data: { requestId: data.id.toString() },
       };
 
-      await admin.messaging().sendMulticast(message);
-    }
+await admin.messaging().sendEachForMulticast(message);    }
 
     return NextResponse.json({
       success: true,
