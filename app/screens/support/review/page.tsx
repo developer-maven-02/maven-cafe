@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useState } from "react";
 import { ArrowLeft, Star } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -43,8 +45,6 @@ export default function ReviewPage() {
 
   return (
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50">
-
-      {/* Header */}
       <div className="flex items-center gap-3 p-4 bg-white border-b">
         <button onClick={() => router.back()}>
           <ArrowLeft size={20} />
@@ -55,10 +55,7 @@ export default function ReviewPage() {
         </h1>
       </div>
 
-      {/* Content */}
       <div className="p-4 space-y-5">
-
-        {/* Rating */}
         <div className="bg-white rounded-xl p-4 shadow-sm">
           <p className="text-sm font-medium mb-3">
             Rate your experience
@@ -80,7 +77,6 @@ export default function ReviewPage() {
           </div>
         </div>
 
-        {/* Comment */}
         <div className="bg-white rounded-xl p-4 shadow-sm">
           <p className="text-sm font-medium mb-2">
             Comments
@@ -95,14 +91,12 @@ export default function ReviewPage() {
           />
         </div>
 
-        {/* Submit */}
         <button
           onClick={handleSubmit}
           className="w-full bg-[#103c7f] text-white py-3 rounded-xl"
         >
           Submit Review
         </button>
-
       </div>
     </div>
   );

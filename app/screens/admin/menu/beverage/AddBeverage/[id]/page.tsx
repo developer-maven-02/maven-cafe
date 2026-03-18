@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Upload } from "lucide-react";
 import { get, post, put } from "@/lib/api";
 import { useParams } from "next/navigation";
 
 export default function AddBeverage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
 const { id } = useParams();
 
   const [name, setName] = useState("");

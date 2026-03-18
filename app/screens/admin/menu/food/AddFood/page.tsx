@@ -8,9 +8,6 @@ import { get, post, put } from "@/lib/api";
 
 export default function AddFood() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const id = searchParams.get("id");
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
