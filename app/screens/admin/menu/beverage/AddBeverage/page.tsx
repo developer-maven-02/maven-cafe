@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import { useRouter} from "next/navigation";
 import { ArrowLeft, Upload } from "lucide-react";
 import { get, post, put } from "@/lib/api";
+import { useParams } from "next/navigation";
 
 export default function AddBeverage() {
   const router = useRouter();
+  const { id } = useParams();
   
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");

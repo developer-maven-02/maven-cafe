@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, Upload } from "lucide-react";
+import { useParams } from "next/navigation";
 
 import { get, post, put } from "@/lib/api";
 
 export default function AddFood() {
   const router = useRouter();
+const { id } = useParams();
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
