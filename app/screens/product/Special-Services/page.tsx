@@ -24,6 +24,17 @@ import {
 import { useRouter } from "next/navigation";
 import { get, post } from "@/lib/api";
 
+type ServiceItem = {
+  id: string;
+  name: string;
+  icon: keyof typeof iconMap;
+};
+
+type QuickNote = {
+  id: string;
+  text: string;
+};
+
 const iconMap = {
   Bell,
   Droplets,
@@ -48,8 +59,8 @@ export default function ServiceRequest() {
 
   const seat = "A12";
 
-  const [services, setServices] = useState([]);
-  const [quickNotes, setQuickNotes] = useState([]);
+  const [services, setServices] = useState<ServiceItem[]>([]);
+  const [quickNotes, setQuickNotes] = useState<QuickNote[]>([]);
   const [service, setService] = useState("");
   const [notes, setNotes] = useState("");
 
@@ -65,7 +76,7 @@ export default function ServiceRequest() {
         setServices(result.services || []);
         setQuickNotes(result.notes || []);
 
-        if (result.services.length > 0) {
+        if (result.services?.length > 0) {
           setService(result.services[0].name);
         }
       }
@@ -74,63 +85,59 @@ export default function ServiceRequest() {
     }
   };
 
- const sendRequest = async () => {
-  try {
-    const result = await post("/customer-service-requests", {
-      service,
-      seat,
-      notes,
-      status: "Pending",
-    });
+  const sendRequest = async () => {
+    try {
+      const result = await post("/customer-service-requests", {
+        service,
+        seat,
+        notes,
+        status: "Pending",
+      });
 
-    if (result.success) {
-      alert("Request sent successfully");
-      setNotes("");
-      router.back();
-    } else {
-      alert(result.message);
+      if (result.success) {
+        alert("Request sent successfully");
+        setNotes("");
+        router.back();
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong");
     }
-  } catch (error) {
-    console.log(error);
-    alert("Something went wrong");
-  }
-};
+  };
 
   return (
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50 pb-28">
 
       {/* Header */}
       <div className="sticky top-0 bg-white flex items-center justify-between p-4 shadow-sm">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.back()}
+            className="p-2 bg-gray-100 rounded-full"
+          >
+            <ArrowLeft size={18} />
+          </button>
 
-  <div className="flex items-center gap-3">
-    <button
-      onClick={() => router.back()}
-      className="p-2 bg-gray-100 rounded-full"
-    >
-      <ArrowLeft size={18} />
-    </button>
+          <h1 className="font-semibold text-lg">
+            Service Request
+          </h1>
+        </div>
 
-    <h1 className="font-semibold text-lg">
-      Service Request
-    </h1>
-  </div>
-
-  <button
-    onClick={() => router.push("/screens/orders/ServiceOrder")}
-    className="p-2 bg-gray-100 rounded-full"
-  >
-    <ClipboardList size={18} />
-  </button>
-
-</div>
+        <button
+          onClick={() => router.push("/screens/orders/ServiceOrder")}
+          className="p-2 bg-gray-100 rounded-full"
+        >
+          <ClipboardList size={18} />
+        </button>
+      </div>
 
       <div className="p-4 space-y-6">
 
         {/* Services */}
         <div className="bg-white p-4 rounded-xl shadow-md">
-          <p className="text-sm font-semibold mb-3">
-            Select Service
-          </p>
+          <p className="text-sm font-semibold mb-3">Select Service</p>
 
           <div className="grid grid-cols-2 gap-3">
             {services.map((s) => {
@@ -147,9 +154,7 @@ export default function ServiceRequest() {
                   }`}
                 >
                   <Icon size={22} />
-                  <span className="text-sm">
-                    {s.name}
-                  </span>
+                  <span className="text-sm">{s.name}</span>
                 </button>
               );
             })}
@@ -158,9 +163,7 @@ export default function ServiceRequest() {
 
         {/* Seat */}
         <div className="bg-white p-4 rounded-xl shadow-md">
-          <p className="text-sm font-medium mb-2">
-            Delivery Location
-          </p>
+          <p className="text-sm font-medium mb-2">Delivery Location</p>
 
           <div className="bg-gray-100 rounded-lg p-3 text-sm text-gray-700 shadow-inner">
             Seat {seat}
@@ -169,9 +172,7 @@ export default function ServiceRequest() {
 
         {/* Quick Notes */}
         <div className="bg-white p-4 rounded-xl shadow-md">
-          <p className="text-sm font-semibold mb-3">
-            Quick Notes
-          </p>
+          <p className="text-sm font-semibold mb-3">Quick Notes</p>
 
           <div className="flex flex-wrap gap-2">
             {quickNotes.map((q) => (
@@ -188,9 +189,7 @@ export default function ServiceRequest() {
 
         {/* Notes */}
         <div className="bg-white p-4 rounded-xl shadow-md">
-          <p className="text-sm font-semibold mb-2">
-            Additional Notes
-          </p>
+          <p className="text-sm font-semibold mb-2">Additional Notes</p>
 
           <textarea
             value={notes}
@@ -206,17 +205,14 @@ export default function ServiceRequest() {
       {/* Bottom */}
       <div className="fixed bottom-0 left-0 right-0 flex justify-center">
         <div className="max-w-[420px] w-full p-4 bg-white shadow-[0_-4px_15px_rgba(0,0,0,0.12)] rounded-t-2xl">
-
           <button
             onClick={sendRequest}
             className="w-full bg-[#a1db40] text-black py-3 rounded-xl font-semibold shadow-md hover:scale-[1.01] transition"
           >
             Send Request
           </button>
-
         </div>
       </div>
-
     </div>
   );
 }
