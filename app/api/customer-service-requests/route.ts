@@ -124,7 +124,7 @@ export async function POST(req: Request) {
       .select("fcm_token")
       .not("fcm_token", "is", null); // Only staff with tokens
 
-    const tokens = staffTokens.map((t) => t.fcm_token).filter(Boolean);
+const tokens = staffTokens?.map((t) => t.fcm_token).filter(Boolean) || [];
 
     if (tokens.length > 0) {
       const message = {
