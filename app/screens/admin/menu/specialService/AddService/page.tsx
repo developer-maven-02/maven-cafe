@@ -1,7 +1,8 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Bell,
   Droplets,
@@ -25,6 +26,8 @@ import { get, post, put } from "@/lib/api"; // your axios wrapper
 
 export default function AddService() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const serviceId = searchParams.get("id"); // if editing
 
   const [serviceName, setServiceName] = useState("");
   const [selectedIcon, setSelectedIcon] = useState("Sparkles");
