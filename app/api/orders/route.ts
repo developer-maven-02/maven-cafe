@@ -90,14 +90,13 @@
 //   }
 // }
 
+// app/api/order/route.ts
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase-server";
 import { verifyToken } from "@/lib/auth";
 import admin from "firebase-admin";
 
-// Initialize Firebase Admin only once
-
-
+// Initialize Firebase Admin once
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert({
@@ -108,18 +107,12 @@ if (!admin.apps.length) {
   });
 }
 
-
-// Replace this with all active staff FCM tokens (store in DB in production)
-const STAFF_FCM_TOKENS = [
-  "cjKkyLuzd3k1btAKFipfXk:APA91bF7ubf0EQNrywH2R4x9Tf1zmfsIzs0gB3C1l7QHeAGIcm8d1rb-PVgv4G46L0cC_8quqtRJkF2lDOgf4v-mQ9fhICAfNN6wwlOFe7UrKzMknB9hAVA"
-];
-
 export async function POST(req: Request) {
   try {
+    // Verify staff or user
     const { userId } = await verifyToken(req);
 
-    const body = await req.json();
-
+    // Get order data from request
     const {
       item_id,
       quantity,
@@ -128,16 +121,16 @@ export async function POST(req: Request) {
       sugar,
       food_type,
       notes,
-    } = body;
+    } = await req.json();
 
-    // Fetch user
+    // Fetch user info
     const { data: user } = await supabaseServer
       .from("users")
       .select("name, seat")
       .eq("id", userId)
       .single();
 
-    // Fetch item
+    // Fetch item info
     const { data: item } = await supabaseServer
       .from("items")
       .select("*")
@@ -147,12 +140,12 @@ export async function POST(req: Request) {
     if (!user || !item) {
       return NextResponse.json(
         { success: false, message: "Invalid user or item" },
-        { status: 200 }
+        { status: 400 }
       );
     }
 
     // Insert order
-    const { data, error } = await supabaseServer
+    const { data: order, error: orderError } = await supabaseServer
       .from("orders")
       .insert([
         {
@@ -173,29 +166,47 @@ export async function POST(req: Request) {
       .select()
       .single();
 
-    if (error) {
-      return NextResponse.json({ success: false, message: error.message }, { status: 200 });
+    if (orderError) {
+      return NextResponse.json(
+        { success: false, message: orderError.message },
+        { status: 500 }
+      );
     }
 
-    // ✅ Send FCM notification to staff
-    try {
-      const message = {
-        tokens: STAFF_FCM_TOKENS,
-        notification: {
-          title: "☕ New Order Received!",
-          body: `${user.name} placed ${quantity} x ${item.name}`,
-        },
-        data: { orderId: data.id.toString() },
-      };
+    // ✅ Fetch all staff FCM tokens
+    const { data: staffUsers, error: staffError } = await supabaseServer
+      .from("users")
+      .select("fcm_token")
+      .eq("role", "staff")
+      .not("fcm_token", "is", null);
 
-      const fcmResponse = await admin.messaging().sendEachForMulticast(message);;
-      console.log("Notification sent:", fcmResponse);
-    } catch (fcmError) {
-      console.error("FCM error:", fcmError);
+    if (staffError) {
+      console.error("Error fetching staff tokens:", staffError);
+    }
+
+    const STAFF_FCM_TOKENS = staffUsers?.map((u) => u.fcm_token) || [];
+
+    // ✅ Send FCM notification if tokens exist
+    if (STAFF_FCM_TOKENS.length > 0) {
+      try {
+        const message = {
+          tokens: STAFF_FCM_TOKENS,
+          notification: {
+            title: "☕ New Order Received!",
+            body: `${user.name} placed ${quantity} x ${item.name}`,
+          },
+          data: { orderId: order.id.toString() },
+        };
+
+        const fcmResponse = await admin.messaging().sendEachForMulticast(message);
+        console.log("FCM notification sent:", fcmResponse.successCount);
+      } catch (fcmError) {
+        console.error("FCM error:", fcmError);
+      }
     }
 
     return NextResponse.json(
-      { success: true, message: "Order placed successfully", order: data },
+      { success: true, message: "Order placed successfully", order },
       { status: 200 }
     );
   } catch (error: any) {

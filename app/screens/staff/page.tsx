@@ -118,6 +118,12 @@ export default function StaffDashboard() {
           });
 
           console.log("FCM Token:", token);
+        await fetch("/api/save-fcm-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fcmToken: token  }),
+      });
+
         }
 
         onMessage(messaging, () => {
