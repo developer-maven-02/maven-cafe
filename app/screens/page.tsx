@@ -10,6 +10,7 @@ import {
   AlertCircle,
   Headphones,
 } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { get } from "@/lib/api";
@@ -62,8 +63,14 @@ export default function MenuPage() {
 
       {/* Header */}
       <div className="sticky top-0 bg-white flex justify-between items-center p-4 border-b z-20">
-        <h1 className="font-semibold text-lg text-[#103c7f]">Cafeteria</h1>
-
+<div className="w-32 h-12 relative">
+  <Image
+    src="/logo.png"
+    alt="Logo"
+    fill
+    className="object-contain"
+  />
+</div>
         <div className="flex items-center gap-4">
           <Link href="/screens/orders/MyOrders">
             <div className="relative">
