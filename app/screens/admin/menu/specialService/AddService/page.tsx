@@ -1,5 +1,4 @@
 "use client";
-export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -23,11 +22,11 @@ import {
   ArrowLeft
 } from "lucide-react";
 import { get, post, put } from "@/lib/api"; // your axios wrapper
+import { useParams } from "next/navigation";
 
 export default function AddService() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const serviceId = searchParams.get("id"); // if editing
+   const { id } = useParams();
 
   const [serviceName, setServiceName] = useState("");
   const [selectedIcon, setSelectedIcon] = useState("Sparkles");
@@ -54,9 +53,9 @@ export default function AddService() {
 
   // ✅ Load service if editing
   useEffect(() => {
-    if (serviceId) {
+    if (id) {
       setLoading(true);
-      get(`/admin_api/special-services/${serviceId}`)
+      get(`/admin_api/special-services/${id}`)
         .then((res: any) => {
           if (res.success && res.data) {
             setServiceName(res.data.name);
@@ -66,7 +65,7 @@ export default function AddService() {
         .catch((err) => alert(err.message || err))
         .finally(() => setLoading(false));
     }
-  }, [serviceId]);
+  }, [id]);
 
   // ✅ Save or Update service
   const handleSave = async () => {
@@ -84,9 +83,9 @@ export default function AddService() {
 
     try {
       let res;
-      if (serviceId) {
+      if (id) {
         // update existing
-        res = await put(`/admin_api/special-services/${serviceId}`, payload);
+        res = await put(`/admin_api/special-services/${id}`, payload);
       } else {
         // create new
         res = await post(`/admin_api/special-services`, payload);
@@ -117,7 +116,7 @@ export default function AddService() {
           <ArrowLeft size={18} />
         </button>
         <h1 className="font-semibold text-lg">
-          {serviceId ? "Edit Service" : "Add Service"}
+          {id ? "Edit Service" : "Add Service"}
         </h1>
       </div>
 
@@ -160,7 +159,7 @@ export default function AddService() {
           disabled={loading}
           className="w-full bg-[#103c7f] text-white py-3 rounded-xl font-semibold"
         >
-          {loading ? (serviceId ? "Updating..." : "Saving...") : (serviceId ? "Update Service" : "Save Service")}
+          {loading ? (id ? "Updating..." : "Saving...") : (id ? "Update Service" : "Save Service")}
         </button>
 
       </div>
