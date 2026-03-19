@@ -127,10 +127,6 @@ export async function POST(req: Request) {
 
           console.log("⚠️ Failed tokens:", failedTokens);
 
-          await supabaseServer
-            .from("users")
-            .update({ fcm_token: null })
-            .in("fcm_token", failedTokens);
         }
       } catch (fcmError) {
         console.error("FCM send error:", fcmError);
