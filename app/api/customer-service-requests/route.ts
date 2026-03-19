@@ -1,4 +1,3 @@
-// app/api/service-request/route.ts
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase-server";
 import { verifyToken } from "@/lib/auth";
@@ -17,10 +16,10 @@ if (!admin.apps.length) {
 
 export async function POST(req: Request) {
   try {
-    // Verify the user
+    // Verify logged-in user
     const { userId } = await verifyToken(req);
-    console.log('ccjcjcj');
-    // Get request data
+
+    // Get request body
     const { service, seat, notes } = await req.json();
 
     if (!service || !seat) {
@@ -67,53 +66,84 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Fetch staff FCM tokens
+    // Fetch staff FCM tokens
     const { data: staffTokens, error: staffError } = await supabaseServer
       .from("users")
       .select("fcm_token")
       .eq("role", "staff")
       .not("fcm_token", "is", null);
-    console.log('ccc',staffTokens);
+
     if (staffError) {
       console.error("Error fetching staff tokens:", staffError);
     }
 
-    const tokens = staffTokens?.map((t) => t.fcm_token).filter(Boolean) || [];
-         console.log('cheheh',tokens);
-    // ✅ Send FCM notification to staff
+    // Remove duplicates + nulls
+    const tokens = [
+      ...new Set(staffTokens?.map((t) => t.fcm_token).filter(Boolean)),
+    ] as string[];
+
+    // Send notification
     if (tokens.length > 0) {
       const message = {
-  tokens,
-  notification: {
-    title: "🛠 New Service Request",
-    body: `${user.name} requested ${service} at seat ${seat}`,
-  },
-  data: {
-    title: "🛠 New Service Request",
-    body: `${user.name} requested ${service} at seat ${seat}`,
-    requestId: String(request.id),
-  },
-  webpush: {
-    notification: {
-      title: "🛠 New Service Request",
-      body: `${user.name} requested ${service} at seat ${seat}`,
-      icon: "/logo.png",
-      badge: "/logo.png",
-      requireInteraction: true,
-    },
-  },
-};
+        tokens,
+        notification: {
+          title: "🛠 New Service Request",
+          body: `${user.name} requested ${service} at seat ${seat}`,
+        },
+        data: {
+          title: "🛠 New Service Request",
+          body: `${user.name} requested ${service} at seat ${seat}`,
+          requestId: String(request.id),
+        },
+        webpush: {
+          notification: {
+            title: "🛠 New Service Request",
+            body: `${user.name} requested ${service} at seat ${seat}`,
+            icon: "/logo.png",
+            badge: "/logo.png",
+            requireInteraction: true,
+          },
+        },
+      };
 
       try {
-        const fcmResponse = await admin.messaging().sendEachForMulticast(message);
-        console.log("Service FCM sent:", fcmResponse.successCount);
+        const fcmResponse = await admin
+          .messaging()
+          .sendEachForMulticast(message);
+
+        console.log("✅ FCM success:", fcmResponse.successCount);
+        console.log("❌ FCM failure:", fcmResponse.failureCount);
+
+        // Cleanup failed tokens
+        if (fcmResponse.failureCount > 0) {
+          const failedTokens: string[] = [];
+
+          fcmResponse.responses.forEach((resp, idx) => {
+            if (!resp.success) {
+              failedTokens.push(tokens[idx]);
+            }
+          });
+
+          console.log("⚠️ Failed tokens:", failedTokens);
+
+          await supabaseServer
+            .from("users")
+            .update({ fcm_token: null })
+            .in("fcm_token", failedTokens);
+        }
       } catch (fcmError) {
         console.error("FCM send error:", fcmError);
       }
     }
 
-    return NextResponse.json({ success: true, request }, { status: 200 });
+    return NextResponse.json(
+      { success: true, request },
+      { status: 200 }
+    );
   } catch (error: any) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: error.message || "Server error" },
+      { status: 500 }
+    );
   }
 }
