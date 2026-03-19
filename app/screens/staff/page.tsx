@@ -130,17 +130,23 @@ async function initFirebaseNotifications() {
 
     // 6️⃣ Listen for foreground messages
     onMessage(messaging, (payload) => {
-      console.log("🔔 FCM Message received:", payload);
-      if (payload.notification && Notification.permission === "granted") {
-        new Notification(payload.notification.title, {
-          body: payload.notification.body,
-          icon: "/logo.png",
-          badge: "/logo.png",
-         requireInteraction: true, // keeps it on screen until user clicks
+  console.log("🔔 FCM Message received:", payload);
 
-        });
-      }
+  if (payload.notification && Notification.permission === "granted") {
+    const title = payload.notification.title || "New Notification";
+    const body = payload.notification.body || "You have a new message";
+
+    new Notification(title, {
+      body,
+      icon: "/logo.png",
+      badge: "/logo.png",
+      requireInteraction: true,
     });
+  }
+
+  playBeep();
+  fetchDashboard();
+});
   } catch (err) {
     console.error("Firebase init error:", err);
   }
