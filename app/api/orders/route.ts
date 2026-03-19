@@ -1,96 +1,3 @@
-// import { NextResponse } from "next/server";
-// import { supabaseServer } from "@/lib/supabase-server";
-// import { verifyToken } from "@/lib/auth";
-
-// export async function POST(req: Request) {
-//   try {
-//     const { userId } = await verifyToken(req);
-
-//     const body = await req.json();
-
-//     const {
-//       item_id,
-//       quantity,
-//       temperature,
-//       drink_type,
-//       sugar,
-//       food_type,
-//       notes,
-//     } = body;
-
-//     const { data: user } = await supabaseServer
-//       .from("users")
-//       .select("name, seat")
-//       .eq("id", userId)
-//       .single();
-
-//     const { data: item } = await supabaseServer
-//       .from("items")
-//       .select("*")
-//       .eq("id", item_id)
-//       .single();
-
-//     if (!user || !item) {
-//       return NextResponse.json(
-//         {
-//           success: false,
-//           message: "Invalid user or item",
-//         },
-//         { status: 200 }
-//       );
-//     }
-
-//     const { data, error } = await supabaseServer
-//       .from("orders")
-//       .insert([
-//         {
-//           user_id: userId,
-//           user_name: user.name,
-//           item_id: item.id,
-//           item_name: item.name,
-//           category: item.category,
-//           quantity,
-//           seat: user.seat,
-//           temperature,
-//           drink_type,
-//           sugar,
-//           food_type,
-//           notes,
-//         },
-//       ])
-//       .select()
-//       .single();
-
-//     if (error) {
-//       return NextResponse.json(
-//         {
-//           success: false,
-//           message: error.message,
-//         },
-//         { status: 200 }
-//       );
-//     }
-
-//     return NextResponse.json(
-//       {
-//         success: true,
-//         message: "Order placed successfully",
-//         order: data,
-//       },
-//       { status: 200 }
-//     );
-//   } catch (error: any) {
-//     return NextResponse.json(
-//       {
-//         success: false,
-//         message: error.message || "Server error",
-//       },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-// app/api/order/route.ts
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase-server";
 import { verifyToken } from "@/lib/auth";
@@ -109,10 +16,10 @@ if (!admin.apps.length) {
 
 export async function POST(req: Request) {
   try {
-    // Verify staff or user
+    // Verify user
     const { userId } = await verifyToken(req);
 
-    // Get order data from request
+    // Get order body
     const {
       item_id,
       quantity,
@@ -123,14 +30,14 @@ export async function POST(req: Request) {
       notes,
     } = await req.json();
 
-    // Fetch user info
+    // Fetch user
     const { data: user } = await supabaseServer
       .from("users")
       .select("name, seat")
       .eq("id", userId)
       .single();
 
-    // Fetch item info
+    // Fetch item
     const { data: item } = await supabaseServer
       .from("items")
       .select("*")
@@ -173,7 +80,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Fetch all staff FCM tokens
+    // Fetch staff tokens
     const { data: staffUsers, error: staffError } = await supabaseServer
       .from("users")
       .select("fcm_token")
@@ -184,47 +91,79 @@ export async function POST(req: Request) {
       console.error("Error fetching staff tokens:", staffError);
     }
 
-    const STAFF_FCM_TOKENS = staffUsers?.map((u) => u.fcm_token) || [];
+    // Remove duplicates + nulls
+    const tokens = [
+      ...new Set(staffUsers?.map((u) => u.fcm_token).filter(Boolean)),
+    ] as string[];
 
-    // ✅ Send FCM notification if tokens exist
-    if (STAFF_FCM_TOKENS.length > 0) {
+    // Send FCM
+    if (tokens.length > 0) {
+      const message = {
+        tokens,
+        notification: {
+          title: "☕ New Order Received!",
+          body: `${user.name} placed ${quantity} x ${item.name}`,
+        },
+        data: {
+          title: "☕ New Order Received!",
+          body: `${user.name} placed ${quantity} x ${item.name}`,
+          orderId: String(order.id),
+        },
+        webpush: {
+          notification: {
+            title: "☕ New Order Received!",
+            body: `${user.name} placed ${quantity} x ${item.name}`,
+            icon: "/logo.png",
+            badge: "/logo.png",
+            requireInteraction: true,
+          },
+        },
+      };
+
       try {
-  const message = {
-  tokens: STAFF_FCM_TOKENS,
-  notification: {
-    title: "☕ New Order Received!",
-    body: `${user.name} placed ${quantity} x ${item.name}`,
-  },
-  data: {
-    title: "☕ New Order Received!",
-    body: `${user.name} placed ${quantity} x ${item.name}`,
-    orderId: String(order.id),
-  },
-  webpush: {
-    notification: {
-      title: "☕ New Order Received!",
-      body: `${user.name} placed ${quantity} x ${item.name}`,
-      icon: "/logo.png",
-      badge: "/logo.png",
-      requireInteraction: true,
-    },
-  },
-};
+        const fcmResponse = await admin
+          .messaging()
+          .sendEachForMulticast(message);
 
-        const fcmResponse = await admin.messaging().sendEachForMulticast(message);
-        console.log("FCM notification sent:", fcmResponse.successCount);
+        console.log("✅ Order FCM success:", fcmResponse.successCount);
+        console.log("❌ Order FCM failure:", fcmResponse.failureCount);
+
+        // Cleanup failed tokens
+        if (fcmResponse.failureCount > 0) {
+          const failedTokens: string[] = [];
+
+          fcmResponse.responses.forEach((resp, idx) => {
+            if (!resp.success) {
+              failedTokens.push(tokens[idx]);
+            }
+          });
+
+          console.log("⚠️ Failed tokens:", failedTokens);
+
+          await supabaseServer
+            .from("users")
+            .update({ fcm_token: null })
+            .in("fcm_token", failedTokens);
+        }
       } catch (fcmError) {
-        console.error("FCM error:", fcmError);
+        console.error("FCM send error:", fcmError);
       }
     }
 
     return NextResponse.json(
-      { success: true, message: "Order placed successfully", order },
+      {
+        success: true,
+        message: "Order placed successfully",
+        order,
+      },
       { status: 200 }
     );
   } catch (error: any) {
     return NextResponse.json(
-      { success: false, message: error.message || "Server error" },
+      {
+        success: false,
+        message: error.message || "Server error",
+      },
       { status: 500 }
     );
   }

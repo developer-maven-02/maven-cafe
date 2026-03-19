@@ -76,7 +76,8 @@ export async function POST(req: Request) {
     if (staffError) {
       console.error("Error fetching staff tokens:", staffError);
     }
-
+    
+    console.log('toekek',staffTokens);
     // Remove duplicates + nulls
     const tokens = [
       ...new Set(staffTokens?.map((t) => t.fcm_token).filter(Boolean)),
