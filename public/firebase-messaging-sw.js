@@ -16,17 +16,28 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 // Handle background messages
-messaging.onBackgroundMessage(function (payload) {
-  console.log("[firebase-messaging-sw.js] Received background message ", payload);
+messaging.onBackgroundMessage(async function (payload) {
+  console.log("[firebase-messaging-sw.js] Order background message:", payload);
 
-  const notificationTitle = payload.notification?.title || "Maven Cafe";
+  const notificationTitle =
+    payload.notification?.title ||
+    payload.data?.title ||
+    "☕ New Order Received!";
+
   const notificationOptions = {
-    body: payload.notification?.body || "You have a new notification",
+    body:
+      payload.notification?.body ||
+      payload.data?.body ||
+      "A customer placed a new order",
     icon: "/logo.png",
-    badge: "/favicon.ico",
-    tag: "maven-cafe-notification",
+    badge: "/logo.png",
+    tag: "order-" + Date.now(),
     requireInteraction: true,
+    renotify: true,
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  await self.registration.showNotification(
+    notificationTitle,
+    notificationOptions
+  );
 });

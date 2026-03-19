@@ -189,7 +189,7 @@ export async function POST(req: Request) {
     // ✅ Send FCM notification if tokens exist
     if (STAFF_FCM_TOKENS.length > 0) {
       try {
-        const message = {
+  const message = {
   tokens: STAFF_FCM_TOKENS,
   notification: {
     title: "☕ New Order Received!",

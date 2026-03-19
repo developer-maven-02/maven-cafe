@@ -180,36 +180,32 @@ useEffect(() => {
       }
 
       // Listen for foreground messages
-      onMessage(messaging, (payload) => {
-        console.log("🔔 FCM Message received:", payload);
-        
-        if (payload.notification) {
-          const title = payload.notification.title || "New Notification";
-          const body = payload.notification.body || "You have a new message";
+     onMessage(messaging, (payload) => {
+  console.log("🔔 Order Notification received:", payload);
 
-          // Show notification
-          try {
-            new Notification(title, {
-        body: body,
+  if (payload.notification && Notification.permission === "granted") {
+    const title = payload.notification.title || "☕ New Order Received!";
+    const body = payload.notification.body || "A new order has arrived";
+
+    try {
+      new Notification(title, {
+        body,
         icon: "/logo.png",
         badge: "/logo.png",
-        tag: 'order-' + Date.now(),
-        requireInteraction: true, // Keeps notification visible
+        tag: "order-" + Date.now(),
+        requireInteraction: true,
         silent: false,
-        // Mac specific - these help
-        dir: 'auto',
-        lang: 'en',
       });
 
-            console.log("✅ Notification shown in foreground");
-          } catch (notifError) {
-            console.error("❌ Error showing notification:", notifError);
-          }
-        }
+      console.log("✅ Order notification shown");
+    } catch (error) {
+      console.error("❌ Notification error:", error);
+    }
+  }
 
-        playBeep();
-        fetchDashboard();
-      });
+  playBeep();       // sound alert 🔊
+  fetchDashboard(); // refresh order list 🔄
+});
       
       console.log("✅ onMessage listener registered");
       
