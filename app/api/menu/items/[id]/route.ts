@@ -7,6 +7,8 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+  
+    const { userId } = await verifyToken(req);
 
     const { id } = await params;
 
@@ -15,6 +17,14 @@ export async function GET(
       .select("*")
       .eq("id", id)
       .single();
+
+          // user seat fetch
+    const { data: user, error: userError } = await supabaseServer
+      .from("users")
+      .select("seat")
+      .eq("id", userId)
+      .single();
+
 
     if (error) {
       return NextResponse.json(
@@ -28,6 +38,7 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
+      seat: user?.seat || "",
       item: data,
     });
   } catch (error: any) {

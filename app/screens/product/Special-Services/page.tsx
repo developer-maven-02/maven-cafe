@@ -57,8 +57,7 @@ const iconMap = {
 export default function ServiceRequest() {
   const router = useRouter();
 
-  const seat = "A12";
-
+const [seat, setSeat] = useState("");
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [quickNotes, setQuickNotes] = useState<QuickNote[]>([]);
   const [service, setService] = useState("");
@@ -75,6 +74,7 @@ export default function ServiceRequest() {
       if (result.success) {
         setServices(result.services || []);
         setQuickNotes(result.notes || []);
+           setSeat(result.seat || "");
 
         if (result.services?.length > 0) {
           setService(result.services[0].name);
@@ -166,7 +166,7 @@ export default function ServiceRequest() {
           <p className="text-sm font-medium mb-2">Delivery Location</p>
 
           <div className="bg-gray-100 rounded-lg p-3 text-sm text-gray-700 shadow-inner">
-            Seat {seat}
+          {seat}
           </div>
         </div>
 

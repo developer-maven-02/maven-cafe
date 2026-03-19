@@ -17,7 +17,7 @@ export default function ItemDetails() {
   const [sugar, setSugar] = useState(1);
   const [qty, setQty] = useState(1);
   const [notes, setNotes] = useState("");
-
+  const [seat, setSeat] = useState("");
   useEffect(() => {
     fetchItem();
   }, []);
@@ -28,6 +28,8 @@ export default function ItemDetails() {
 
       if (result.success) {
         setItem(result.item);
+        setSeat(result.seat || "");
+
       }
     } catch (error) {
       console.error(error);
@@ -41,6 +43,7 @@ export default function ItemDetails() {
     const body = {
       item_id: item.id,
       quantity: qty,
+      seat,
       temperature: item.category === "Beverage" ? temperature : null,
       drink_type: item.category === "Beverage" ? type : null,
       sugar: item.category === "Beverage" ? sugar : null,
@@ -182,6 +185,13 @@ export default function ItemDetails() {
             </button>
           </div>
         </div>
+        <div className="bg-white p-4 rounded-xl shadow-md">
+  <p className="text-sm font-medium mb-2">Delivery Location</p>
+
+  <div className="bg-gray-100 rounded-lg p-3 text-sm text-gray-700 shadow-inner">
+    {seat}
+  </div>
+</div>
 
         {/* Notes */}
         <div className="bg-white p-4 rounded-xl shadow-md">
