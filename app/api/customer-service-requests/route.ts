@@ -111,7 +111,7 @@ export async function POST(req: Request) {
         const fcmResponse = await admin
           .messaging()
           .sendEachForMulticast(message);
-
+        console.log(fcmResponse);
         console.log("✅ FCM success:", fcmResponse.successCount);
         console.log("❌ FCM failure:", fcmResponse.failureCount);
 
