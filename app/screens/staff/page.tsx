@@ -73,7 +73,7 @@ export default function StaffDashboard() {
       if (!soundIntervalRef.current) {
         soundIntervalRef.current = setInterval(() => {
           playBeep();
-        }, 1000);
+        }, 5000);
       }
     } else {
       if (soundIntervalRef.current) {
@@ -96,44 +96,55 @@ export default function StaffDashboard() {
 
     const interval = setInterval(() => {
       fetchDashboard();
-    }, 5000);
+    }, 50000);
 
-    async function initFirebaseNotifications() {
-      try {
-        const messaging = await getFirebaseMessaging();
-        if (!messaging) return;
+async function initFirebaseNotifications() {
+  try {
+    const messaging = await getFirebaseMessaging();
+    if (!messaging) return;
 
-        const registration = await navigator.serviceWorker.register(
-          "/firebase-messaging-sw.js"
-        );
+    // 1️⃣ Register SW
+    await navigator.serviceWorker.register("/firebase-messaging-sw.js");
 
-        await navigator.serviceWorker.ready;
+    // 2️⃣ Wait for ready SW
+    const registration = await navigator.serviceWorker.ready;
 
-        const permission = await Notification.requestPermission();
+    // 3️⃣ Request Notification permission
+    const permission = await Notification.requestPermission();
+    console.log("Notification permission:", permission);
+    if (permission !== "granted") return;
 
-        if (permission === "granted") {
-          const token = await getToken(messaging, {
-            vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
-            serviceWorkerRegistration: registration,
-          });
+    // 4️⃣ Get FCM token
+    const token = await getToken(messaging, {
+      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+      serviceWorkerRegistration: registration,
+    });
+    console.log("FCM Token:", token);
 
-          console.log("FCM Token:", token);
-        await fetch("/api/save-fcm-token", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fcmToken: token  }),
-      });
+    // 5️⃣ Save token to server
+    await fetch("/api/save-fcm-token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fcmToken: token }),
+    });
 
-        }
+    // 6️⃣ Listen for foreground messages
+    onMessage(messaging, (payload) => {
+      console.log("🔔 FCM Message received:", payload);
+      if (payload.notification && Notification.permission === "granted") {
+        new Notification(payload.notification.title, {
+          body: payload.notification.body,
+          icon: "/logo.png",
+          badge: "/logo.png",
+         requireInteraction: true, // keeps it on screen until user clicks
 
-        onMessage(messaging, () => {
-          playBeep();
-          fetchDashboard();
         });
-      } catch (err) {
-        console.error("Firebase init error:", err);
       }
-    }
+    });
+  } catch (err) {
+    console.error("Firebase init error:", err);
+  }
+}
 
     initFirebaseNotifications();
 

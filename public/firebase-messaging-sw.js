@@ -22,7 +22,7 @@ messaging.onBackgroundMessage(function (payload) {
   const notificationTitle = payload.notification?.title || "Maven Cafe";
   const notificationOptions = {
     body: payload.notification?.body || "You have a new notification",
-    icon: "/favicon.ico",
+    icon: "/logo.png",
     badge: "/favicon.ico",
     tag: "maven-cafe-notification",
     requireInteraction: true,

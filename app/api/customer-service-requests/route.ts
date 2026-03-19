@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   try {
     // Verify the user
     const { userId } = await verifyToken(req);
-
+    console.log('ccjcjcj');
     // Get request data
     const { service, seat, notes } = await req.json();
 
@@ -73,13 +73,13 @@ export async function POST(req: Request) {
       .select("fcm_token")
       .eq("role", "staff")
       .not("fcm_token", "is", null);
-
+    console.log('ccc',staffTokens);
     if (staffError) {
       console.error("Error fetching staff tokens:", staffError);
     }
 
     const tokens = staffTokens?.map((t) => t.fcm_token).filter(Boolean) || [];
-
+         console.log('cheheh',tokens);
     // ✅ Send FCM notification to staff
     if (tokens.length > 0) {
       const message = {
