@@ -190,13 +190,26 @@ export async function POST(req: Request) {
     if (STAFF_FCM_TOKENS.length > 0) {
       try {
         const message = {
-          tokens: STAFF_FCM_TOKENS,
-          notification: {
-            title: "☕ New Order Received!",
-            body: `${user.name} placed ${quantity} x ${item.name}`,
-          },
-          data: { orderId: order.id.toString() },
-        };
+  tokens: STAFF_FCM_TOKENS,
+  notification: {
+    title: "☕ New Order Received!",
+    body: `${user.name} placed ${quantity} x ${item.name}`,
+  },
+  data: {
+    title: "☕ New Order Received!",
+    body: `${user.name} placed ${quantity} x ${item.name}`,
+    orderId: String(order.id),
+  },
+  webpush: {
+    notification: {
+      title: "☕ New Order Received!",
+      body: `${user.name} placed ${quantity} x ${item.name}`,
+      icon: "/logo.png",
+      badge: "/logo.png",
+      requireInteraction: true,
+    },
+  },
+};
 
         const fcmResponse = await admin.messaging().sendEachForMulticast(message);
         console.log("FCM notification sent:", fcmResponse.successCount);

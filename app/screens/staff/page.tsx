@@ -91,71 +91,140 @@ export default function StaffDashboard() {
   }, [liveOrders, liveServices]);
 
   // Firebase + polling
-  useEffect(() => {
-    fetchDashboard();
-
-    const interval = setInterval(() => {
-      fetchDashboard();
-    }, 50000);
-
-async function initFirebaseNotifications() {
-  try {
-    const messaging = await getFirebaseMessaging();
-    if (!messaging) return;
-
-    // 1️⃣ Register SW
-    await navigator.serviceWorker.register("/firebase-messaging-sw.js");
-
-    // 2️⃣ Wait for ready SW
-    const registration = await navigator.serviceWorker.ready;
-
-    // 3️⃣ Request Notification permission
-    const permission = await Notification.requestPermission();
-    console.log("Notification permission:", permission);
-    if (permission !== "granted") return;
-
-    // 4️⃣ Get FCM token
-    const token = await getToken(messaging, {
-      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
-      serviceWorkerRegistration: registration,
-    });
-    console.log("FCM Token:", token);
-
-    // 5️⃣ Save token to server
-    await fetch("/api/save-fcm-token", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fcmToken: token }),
-    });
-
-    // 6️⃣ Listen for foreground messages
-    onMessage(messaging, (payload) => {
-  console.log("🔔 FCM Message received:", payload);
-
-  if (payload.notification && Notification.permission === "granted") {
-    const title = payload.notification.title || "New Notification";
-    const body = payload.notification.body || "You have a new message";
-
-    new Notification(title, {
-      body,
-      icon: "/logo.png",
-      badge: "/logo.png",
-      requireInteraction: true,
-    });
-  }
-
-  playBeep();
+// Firebase + polling
+useEffect(() => {
+  console.log("🔥 useEffect started");
+  
   fetchDashboard();
-});
-  } catch (err) {
-    console.error("Firebase init error:", err);
+
+  const interval = setInterval(() => {
+    console.log("🔄 Polling dashboard");
+    fetchDashboard();
+  }, 50000);
+
+  async function initFirebaseNotifications() {
+    console.log("📱 initFirebaseNotifications started");
+    
+    try {
+      const messaging = await getFirebaseMessaging();
+      console.log("📱 Firebase messaging:", messaging ? "Available" : "Not available");
+      
+      if (!messaging) {
+        console.error("❌ Firebase messaging not available");
+        return;
+      }
+
+      // Check if service worker is supported
+      if (!('serviceWorker' in navigator)) {
+        console.error("❌ Service Worker not supported");
+        return;
+      }
+      console.log("✅ Service Worker supported");
+
+      // Register SW
+      try {
+        const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+        console.log("✅ Service Worker registered:", registration);
+      } catch (swError) {
+        console.error("❌ SW registration failed:", swError);
+        return;
+      }
+
+      // Wait for ready SW
+      const registration = await navigator.serviceWorker.ready;
+      console.log("✅ Service Worker ready:", registration);
+
+      // Request Notification permission
+      const permission = await Notification.requestPermission();
+      console.log("📱 Notification permission:", permission);
+      
+      if (permission !== "granted") {
+        console.error("❌ Notification permission denied");
+        return;
+      }
+
+      // Get FCM token
+      try {
+        console.log("📱 Getting FCM token with VAPID key:", process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY ? "Present" : "Missing");
+        
+        const token = await getToken(messaging, {
+          vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+          serviceWorkerRegistration: registration,
+        });
+        
+        console.log("📱 FCM Token received:", token ? "Yes (token length: " + token.length + ")" : "No");
+        
+        if (!token) {
+          console.error("❌ No FCM token received");
+          return;
+        }
+
+        // Save token to server
+        console.log("📱 Saving token to server...");
+        const saveResponse = await fetch("/api/save-fcm-token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fcmToken: token }),
+        });
+
+        console.log("📱 Save response status:", saveResponse.status);
+        
+        if (!saveResponse.ok) {
+          const errorText = await saveResponse.text();
+          console.error("❌ Failed to save token to server:", errorText);
+        } else {
+          console.log("✅ Token saved to server");
+        }
+      } catch (tokenError) {
+        console.error("❌ Error getting FCM token:", tokenError);
+      }
+
+      // Listen for foreground messages
+      onMessage(messaging, (payload) => {
+        console.log("🔔 FCM Message received:", payload);
+        
+        if (payload.notification) {
+          const title = payload.notification.title || "New Notification";
+          const body = payload.notification.body || "You have a new message";
+
+          // Show notification
+          try {
+            new Notification(title, {
+        body: body,
+        icon: "/logo.png",
+        badge: "/logo.png",
+        tag: 'order-' + Date.now(),
+        requireInteraction: true, // Keeps notification visible
+        silent: false,
+        // Mac specific - these help
+        dir: 'auto',
+        lang: 'en',
+      });
+
+            console.log("✅ Notification shown in foreground");
+          } catch (notifError) {
+            console.error("❌ Error showing notification:", notifError);
+          }
+        }
+
+        playBeep();
+        fetchDashboard();
+      });
+      
+      console.log("✅ onMessage listener registered");
+      
+    } catch (err) {
+      console.error("❌ Firebase init error:", err);
+    }
   }
-}
 
-    initFirebaseNotifications();
+  initFirebaseNotifications();
 
-    return () => clearInterval(interval);
-  }, []);
+  return () => {
+    console.log("🧹 Cleanup: clearing interval");
+    clearInterval(interval);
+  };
+}, []);
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">

@@ -83,13 +83,26 @@ export async function POST(req: Request) {
     // ✅ Send FCM notification to staff
     if (tokens.length > 0) {
       const message = {
-        tokens,
-        notification: {
-          title: "🛠 New Service Request",
-          body: `${user.name} requested ${service} at seat ${seat}`,
-        },
-        data: { requestId: request.id.toString() },
-      };
+  tokens,
+  notification: {
+    title: "🛠 New Service Request",
+    body: `${user.name} requested ${service} at seat ${seat}`,
+  },
+  data: {
+    title: "🛠 New Service Request",
+    body: `${user.name} requested ${service} at seat ${seat}`,
+    requestId: String(request.id),
+  },
+  webpush: {
+    notification: {
+      title: "🛠 New Service Request",
+      body: `${user.name} requested ${service} at seat ${seat}`,
+      icon: "/logo.png",
+      badge: "/logo.png",
+      requireInteraction: true,
+    },
+  },
+};
 
       try {
         const fcmResponse = await admin.messaging().sendEachForMulticast(message);
