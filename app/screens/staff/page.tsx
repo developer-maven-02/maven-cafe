@@ -6,6 +6,7 @@ import {
   Wrench,
   CheckCircle,
   XCircle,
+  User
 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
@@ -258,8 +259,8 @@ useEffect(() => {
               </p>
             </div>
 
-            <button onClick={() => router.push("/screens/staff/notifications")}>
-              <Bell size={22} />
+            <button onClick={() => router.push("/screens/profile")}>
+              <User size={22} />
             </button>
           </div>
 
