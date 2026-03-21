@@ -6,6 +6,7 @@ import {
   ShoppingBag,
   CheckCircle,
   Users,
+  User,
   UtensilsCrossed,
   ClipboardList
 } from "lucide-react";
@@ -98,15 +99,24 @@ export default function AdminDashboard() {
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50">
 
       {/* Header */}
-      <div className="bg-white p-4 shadow-sm">
-        <h1 className="text-xl font-semibold text-[#103c7f]">
-          Admin Dashboard
-        </h1>
+      <div className="bg-white p-4 shadow-sm flex items-center justify-between">
+  <div>
+    <h1 className="text-xl font-semibold text-[#103c7f]">
+      Admin Dashboard
+    </h1>
 
-        <p className="text-sm text-gray-500">
-          Cafeteria overview
-        </p>
-      </div>
+    <p className="text-sm text-gray-500">
+      Cafeteria overview
+    </p>
+  </div>
+
+  <button
+    onClick={() => router.push("/screens/profile")}
+    className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center shadow-sm"
+  >
+    <User size={18} className="text-[#103c7f]" />
+  </button>
+</div>
 
       {/* Date Filter */}
       <div className="bg-white mx-4 mt-4 p-4 rounded-xl shadow-sm">
