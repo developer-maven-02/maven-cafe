@@ -89,7 +89,7 @@ export default function ServiceProcessingScreen() {
   return (
     <div className="max-w-[420px] mx-auto min-h-screen bg-white">
 
-      <div className="flex items-center gap-3 p-4 border-b">
+      <div className="flex items-center gap-3 p-4 border-b text-[#103c7f]">
         <button onClick={() => router.back()}>
           <ArrowLeft size={20} />
         </button>
@@ -105,26 +105,26 @@ export default function ServiceProcessingScreen() {
 
         <div className="bg-gray-100 p-4 rounded-lg">
           <p className="text-sm text-gray-500">Service</p>
-          <p>{request.service}</p>
+          <p className="text-[#103c7f]">{request.service}</p>
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg">
           <p className="text-sm text-gray-500">Customer</p>
-          <p>{request.user_name}</p>
+          <p className="text-[#103c7f]">{request.user_name}</p>
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg">
           <p className="text-sm text-gray-500">Seat</p>
-          <p>{request.seat}</p>
+          <p className="text-[#103c7f]">{request.seat}</p>
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg">
           <p className="text-sm text-gray-500">Notes</p>
-          <p>{request.notes}</p>
+          <p className="text-[#103c7f]">{request.notes}</p>
         </div>
 
         <div className="bg-gray-100 p-4 rounded-lg">
-          <p>Status: {status}</p>
+          <p className="text-[#103c7f]">Status: {status}</p>
         </div>
         {status === "Rejected" && request.rejected_reason && (
   <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
@@ -171,10 +171,10 @@ export default function ServiceProcessingScreen() {
 
           <div className="bg-white p-5 rounded-lg w-[90%] max-w-sm">
 
-            <h2 className="font-semibold mb-3">Reject Reason</h2>
+            <h2 className="font-semibold mb-3 text-[#103c7f]">Reject Reason</h2>
 
             {rejectReasons.map((r, i) => (
-              <label key={i} className="flex items-center gap-2 mb-2">
+              <label key={i} className="flex items-center gap-2 mb-2 text-[#103c7f]">
                 <input
                   type="radio"
                   checked={reason === r}
@@ -188,7 +188,7 @@ export default function ServiceProcessingScreen() {
 
               <button
                 onClick={() => setShowReject(false)}
-                className="flex-1 bg-gray-200 py-2 rounded-lg"
+                className="flex-1 bg-gray-200 py-2 rounded-lg text-[#103c7f]"
               >
                 Cancel
               </button>

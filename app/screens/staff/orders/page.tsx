@@ -41,7 +41,7 @@ export default function IncomingOrders() {
   return (
     <div className="max-w-[420px] mx-auto min-h-screen bg-white">
 
-      <div className="flex items-center gap-3 p-4">
+      <div className="flex items-center gap-3 p-4 text-[#103c7f]">
         <button onClick={() => router.back()}>
           <ArrowLeft size={20} />
         </button>
@@ -63,7 +63,7 @@ export default function IncomingOrders() {
               Order #{order.id.slice(0, 6)}
             </p>
 
-            <p className="text-sm">
+            <p className="text-sm text-[#103c7f]">
               {order.item_name} × {order.quantity}
             </p>
 

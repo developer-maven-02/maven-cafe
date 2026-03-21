@@ -110,7 +110,7 @@ const fetchOrder = async () => {
   return (
     <div className="max-w-[420px] mx-auto min-h-screen bg-white">
 
-      <div className="flex items-center gap-3 p-4">
+      <div className="flex items-center gap-3 p-4 text-[#103c7f]">
         <button onClick={() => router.back()}>
           <ArrowLeft size={20} />
         </button>
@@ -123,7 +123,7 @@ const fetchOrder = async () => {
       <div className="px-4 pb-4">
         <div className="bg-gray-100 rounded-lg p-4 text-center">
           <p className="text-sm text-gray-500">Customer</p>
-          <p className="font-semibold">{order.user_name}</p>
+          <p className="font-semibold text-[#103c7f]">{order.user_name}</p>
 
           <p className="text-xs text-gray-500 mt-1">Location</p>
           <p className="text-2xl font-bold text-[#103c7f]">
@@ -133,9 +133,9 @@ const fetchOrder = async () => {
       </div>
 
       <div className="px-4 pb-4">
-        <h2 className="font-semibold mb-2">Items</h2>
+        <h2 className="font-semibold mb-2 text-[#103c7f]">Items</h2>
 
-        <div className="space-y-2">
+        <div className="space-y-2 text-[#103c7f]">
           {order.items.map((item, i) => (
             <div
               key={i}
@@ -159,12 +159,12 @@ const fetchOrder = async () => {
 )}
 {status === "Rejected" && order.rejected_reason && (
   <div className="mt-4">
-    <h2 className="font-semibold mb-2 text-red-600">
+    <h2 className="font-semibold mb-2 text-red-600 text-[#103c7f]">
       Rejected Reason
     </h2>
 
     <div className="bg-gray-100 rounded-lg p-3 border-l-4 border-red-500">
-      <p className="text-sm text-gray-700">
+      <p className="text-sm text-gray-700 text-[#103c7f]">
         {order.rejected_reason}
       </p>
     </div>
@@ -182,7 +182,7 @@ const fetchOrder = async () => {
                 className={
                   i <= currentIndex
                     ? "text-[#a1db40] font-semibold"
-                    : "text-gray-500"
+                    : "text-gray-500 text-[#103c7f]"
                 }
               >
                 {step}
@@ -256,10 +256,10 @@ const fetchOrder = async () => {
 
           <div className="bg-white p-5 rounded-lg w-[90%] max-w-sm">
 
-            <h2 className="font-semibold mb-3">Reject Reason</h2>
+            <h2 className="font-semibold mb-3 text-[#103c7f]">Reject Reason</h2>
 
             {rejectReasons.map((r, i) => (
-              <label key={i} className="flex items-center gap-2 mb-2">
+              <label key={i} className="flex items-center gap-2 mb-2 text-[#103c7f]">
                 <input
                   type="radio"
                   checked={reason === r}
@@ -273,7 +273,7 @@ const fetchOrder = async () => {
 
               <button
                 onClick={() => setShowReject(false)}
-                className="flex-1 bg-gray-200 py-2 rounded-lg"
+                className="flex-1 bg-gray-200 py-2 rounded-lg text-[#103c7f]"
               >
                 Cancel
               </button>

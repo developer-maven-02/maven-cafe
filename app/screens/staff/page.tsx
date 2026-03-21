@@ -238,7 +238,7 @@ useEffect(() => {
                 onClick={() => router.push(`/screens/staff/orders/${order.id}`)}
                 className="bg-gray-50 p-4 rounded-lg cursor-pointer hover:bg-gray-100"
               >
-                <p className="font-medium">☕ {order.item_name}</p>
+                <p className="font-medium text-[#103c7f]">☕ {order.item_name}</p>
                 <p className="text-sm text-gray-600">👤 {order.user_name}</p>
                 <p className="text-sm text-gray-500">📍 {order.seat}</p>
                 <p className="text-xs text-yellow-600">{order.status}</p>
@@ -260,7 +260,7 @@ useEffect(() => {
             </div>
 
             <button onClick={() => router.push("/screens/profile")}>
-              <User size={22} />
+              <User size={22} className="text-[#103c7f]"/>
             </button>
           </div>
 
@@ -351,7 +351,7 @@ useEffect(() => {
                 }
                 className="bg-gray-50 p-4 rounded-lg cursor-pointer hover:bg-gray-100"
               >
-                <p className="font-medium">🛠 {service.service}</p>
+                <p className="font-medium text-[#103c7f]">🛠 {service.service}</p>
                 <p className="text-sm text-gray-600">👤 {service.user_name}</p>
                 <p className="text-sm text-gray-500">📍 {service.seat}</p>
                 <p className="text-xs text-yellow-600">{service.status}</p>
