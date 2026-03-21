@@ -68,7 +68,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="flex items-center border border-gray-300 rounded-xl px-3 bg-gray-50 shadow-sm">
-            <Mail className="text-gray-400 w-5 h-5" />
+            <Mail className="text-gray-500 w-5 h-5" />
             <input
               type="email"
               placeholder="Email"
@@ -79,7 +79,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
 
           <div className="flex items-center border border-gray-300 rounded-xl px-3 bg-gray-50 shadow-sm">
-            <Lock className="text-gray-400 w-5 h-5" />
+            <Lock className="text-gray-500 w-5 h-5" />
             <input
               type="password"
               placeholder="Password"

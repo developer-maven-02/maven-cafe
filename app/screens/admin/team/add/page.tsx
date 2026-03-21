@@ -109,7 +109,7 @@ export default function AddMember() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <User size={30} className="text-gray-400"/>
+                <User size={30} className="text-gray-500"/>
               )}
 
             </div>
@@ -128,7 +128,7 @@ export default function AddMember() {
 
           {/* Name */}
           <div className="flex items-center gap-2 border rounded-xl p-3">
-            <User size={16} className="text-gray-400"/>
+            <User size={16} className="text-gray-500"/>
             <input
               placeholder="Full Name"
               value={name}
@@ -139,7 +139,7 @@ export default function AddMember() {
 
           {/* Email */}
           <div className="flex items-center gap-2 border rounded-xl p-3">
-            <Mail size={16} className="text-gray-400"/>
+            <Mail size={16} className="text-gray-500"/>
             <input
               placeholder="Email Address"
               value={email}
@@ -150,7 +150,7 @@ export default function AddMember() {
 
           {/* Password */}
           <div className="flex items-center gap-2 border rounded-xl p-3">
-            <Lock size={16} className="text-gray-400"/>
+            <Lock size={16} className="text-gray-500"/>
             <input
               type="password"
               placeholder="Password"
@@ -162,7 +162,7 @@ export default function AddMember() {
 
           {/* Confirm Password */}
           <div className="flex items-center gap-2 border rounded-xl p-3">
-            <Lock size={16} className="text-gray-400"/>
+            <Lock size={16} className="text-gray-500"/>
             <input
               type="password"
               placeholder="Confirm Password"
@@ -174,7 +174,7 @@ export default function AddMember() {
 
           {/* Role */}
           <div className="flex items-center gap-2 border rounded-xl p-3">
-            <Shield size={16} className="text-gray-400"/>
+            <Shield size={16} className="text-gray-500"/>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
@@ -188,7 +188,7 @@ export default function AddMember() {
 
           {/* Seat */}
           <div className="flex items-center gap-2 border rounded-xl p-3">
-            <MapPin size={16} className="text-gray-400"/>
+            <MapPin size={16} className="text-gray-500"/>
             <input
               placeholder="Seat / Location"
               value={seat}

@@ -172,7 +172,7 @@ export default function OrdersOverview() {
               Location: {order.seat}
             </p>
 
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-gray-500 mt-1">
               Date: {order.created_at?.split("T")[0]}
             </p>
 

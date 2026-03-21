@@ -182,7 +182,7 @@ const fetchOrder = async () => {
                 className={
                   i <= currentIndex
                     ? "text-[#a1db40] font-semibold"
-                    : "text-gray-400"
+                    : "text-gray-500"
                 }
               >
                 {step}

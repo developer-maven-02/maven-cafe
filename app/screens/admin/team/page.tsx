@@ -89,7 +89,7 @@ export default function ManageTeam() {
 
         {/* Search */}
         <div className="bg-white rounded-xl p-3 flex items-center gap-2 border border-gray-200 shadow-sm">
-          <Search size={18} className="text-gray-400"/>
+          <Search size={18} className="text-gray-500"/>
 
           <input
             placeholder="Search name or email..."
@@ -128,7 +128,7 @@ export default function ManageTeam() {
                       {member.email}
                     </p>
 
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-gray-500">
                       {member.role} • Joined {member.created_at?.split("T")[0]}
                     </p>
                   </div>

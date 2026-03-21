@@ -111,7 +111,7 @@ export default function MyOrders() {
                 </p>
 
                 {/* Time */}
-                <p className="text-xs text-gray-400 mt-2">
+                <p className="text-xs text-gray-500 mt-2">
                   Ordered at{" "}
                   {new Date(order.created_at).toLocaleTimeString()}
                 </p>

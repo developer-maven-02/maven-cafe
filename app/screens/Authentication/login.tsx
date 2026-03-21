@@ -34,7 +34,7 @@ export default function LoginPage() {
 
             {/* Email */}
             <div className="flex items-center border rounded-xl px-3">
-              <Mail className="text-gray-400 w-5 h-5"/>
+              <Mail className="text-gray-500 w-5 h-5"/>
               <input
                 type="email"
                 placeholder="Email"
@@ -46,7 +46,7 @@ export default function LoginPage() {
 
             {/* Password */}
             <div className="flex items-center border rounded-xl px-3">
-              <Lock className="text-gray-400 w-5 h-5"/>
+              <Lock className="text-gray-500 w-5 h-5"/>
               <input
                 type="password"
                 placeholder="Password"

@@ -116,7 +116,7 @@ export default function OrderDetails({ params }) {
             </p>
           </div>
 
-          <div className="text-xs text-gray-400 pt-3 border-t">
+          <div className="text-xs text-gray-500 pt-3 border-t">
             Ordered at {new Date(order.created_at).toLocaleTimeString()}
           </div>
         </div>

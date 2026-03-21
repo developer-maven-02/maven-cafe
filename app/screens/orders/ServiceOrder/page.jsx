@@ -125,7 +125,7 @@ export default function MyServiceRequests() {
               )}
 
               {/* Time */}
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-gray-500 mt-2">
                 Requested at{" "}
                 {new Date(request.created_at).toLocaleTimeString()}
               </p>

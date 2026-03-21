@@ -86,11 +86,11 @@ export default function FoodManagement() {
       <div className="p-4 space-y-3">
 
         {loading ? (
-          <p className="text-center text-sm text-gray-400">
+          <p className="text-center text-sm text-gray-500">
             Loading...
           </p>
         ) : items.length === 0 ? (
-          <p className="text-center text-sm text-gray-400">
+          <p className="text-center text-sm text-gray-500">
             No food items found
           </p>
         ) : (

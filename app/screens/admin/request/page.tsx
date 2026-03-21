@@ -166,7 +166,7 @@ export default function ServiceRequestsOverview() {
               Location: {request.seat}
             </p>
 
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-gray-500 mt-1">
               Date: {request.created_at?.split("T")[0]}
             </p>
 
