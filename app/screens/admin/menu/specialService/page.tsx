@@ -96,17 +96,17 @@ export default function SpecialServices() {
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50">
 
       {/* Header */}
-      <div className="sticky top-0 bg-white p-4 flex items-center gap-3 shadow-sm">
+      <div className="sticky top-0 bg-white p-4 flex items-center gap-3 shadow-sm text-[#103c7f]">
         <button onClick={() => router.back()} className="p-2 bg-gray-100 rounded-full">
           <ArrowLeft size={18} />
         </button>
-        <h1 className="text-lg font-semibold">Special Services</h1>
+        <h1 className="text-lg font-semibold ">Special Services</h1>
       </div>
 
       {/* SERVICES */}
       <div className="p-4">
         <div className="flex justify-between mb-4">
-          <h2 className="font-semibold">Services</h2>
+          <h2 className="font-semibold text-[#103c7f]">Services</h2>
           <button
             onClick={() => router.push("/screens/admin/menu/specialService/AddService")}
             className="bg-[#103c7f] text-white px-3 py-1.5 rounded-lg text-sm shadow-sm"
@@ -124,13 +124,13 @@ export default function SpecialServices() {
               return (
                 <div key={item.id} className="bg-white rounded-xl p-4 flex items-center justify-between shadow-md">
                   <div className="flex items-center gap-3">
-                    <div className="bg-gray-100 p-2 rounded-lg">
+                    <div className="bg-gray-100 p-2 rounded-lg text-[#103c7f]">
                       <Icon size={18} />
                     </div>
-                    <p className="font-medium">{item.name}</p>
+                    <p className="font-medium text-[#103c7f]">{item.name}</p>
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 text-[#103c7f]">
                     <button
                       onClick={() => router.push(`/screens/admin/menu/specialService/AddService/${item.id}`)}
                       className="px-3 py-1 bg-gray-100 rounded-md text-sm"
@@ -154,7 +154,7 @@ export default function SpecialServices() {
       {/* QUICK NOTES */}
       <div className="p-4">
         <div className="flex justify-between mb-4">
-          <h2 className="font-semibold">Quick Notes</h2>
+          <h2 className="font-semibold text-[#103c7f]">Quick Notes</h2>
           <button
             onClick={() => router.push("/screens/admin/menu/specialService/AddQuickNote")}
             className="bg-[#103c7f] text-white px-3 py-1.5 rounded-lg text-sm shadow-sm"
@@ -166,7 +166,7 @@ export default function SpecialServices() {
         <div className="space-y-3">
           {notes.map((note) => (
             <div key={note.id} className="bg-white rounded-xl p-4 flex justify-between items-center shadow-md">
-              <p className="text-sm">{note.text}</p>
+              <p className="text-sm text-[#103c7f]">{note.text}</p>
               <button
                 onClick={() => handleDeleteNote(note.id)}
                 className="px-3 py-1 bg-red-500 text-white rounded-md text-sm"

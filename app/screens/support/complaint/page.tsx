@@ -56,7 +56,7 @@ const handleSubmit = async () => {
 
         <button
           onClick={() => router.back()}
-          className="p-2 bg-gray-100 rounded-full"
+          className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
         >
           <ArrowLeft size={18}/>
         </button>
@@ -83,7 +83,7 @@ const handleSubmit = async () => {
 
             <AlertCircle size={16} className="text-[#103c7f]" />
 
-            <p className="text-sm font-semibold">
+            <p className="text-sm font-semibold text-black">
               Select Issue
             </p>
 
@@ -100,7 +100,7 @@ const handleSubmit = async () => {
                 ${
                   reason === r
                     ? "border-[#103c7f] bg-[#103c7f]/5"
-                    : "border-gray-200"
+                    : "border-gray-200 text-black"
                 }`}
               >
                 {r}
@@ -115,7 +115,7 @@ const handleSubmit = async () => {
         {/* Description */}
         <div className="bg-white rounded-xl p-4 shadow-sm">
 
-          <p className="text-sm font-semibold mb-2">
+          <p className="text-sm font-semibold mb-2 text-black">
             Description
           </p>
 

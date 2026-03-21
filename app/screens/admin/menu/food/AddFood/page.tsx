@@ -97,7 +97,7 @@ const { id } = useParams();
       <div className="sticky top-0 bg-white flex items-center gap-3 p-4 shadow-sm">
         <button
           onClick={() => router.back()}
-          className="p-2 bg-gray-100 rounded-full"
+          className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
         >
           <ArrowLeft size={18}/>
         </button>
@@ -116,7 +116,7 @@ const { id } = useParams();
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Veg Sandwich"
-              className="w-full bg-gray-100 rounded-lg p-3 outline-none"
+  className="w-full bg-gray-100 rounded-lg p-2 outline-none border border-gray-300"
             />
           </div>
 
@@ -127,14 +127,14 @@ const { id } = useParams();
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Fresh sandwich with vegetables"
               rows={3}
-              className="w-full bg-gray-100 rounded-lg p-3 outline-none"
+  className="w-full bg-gray-100 rounded-lg p-3 border border-gray-300 focus:ring-2 focus:ring-[#103c7f] focus:border-[#103c7f] outline-none resize-none"
             />
           </div>
 
           <div>
             <p className="text-sm text-gray-500 mb-2">Upload Image</p>
             <label className="flex items-center justify-center gap-2 bg-gray-100 p-4 rounded-lg cursor-pointer">
-              <Upload size={18}/>
+              <Upload size={18}   className="text-[#103c7f]"/>
               <span className="text-sm text-gray-600">Choose Image</span>
               <input
                 type="file"

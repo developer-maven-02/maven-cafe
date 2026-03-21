@@ -79,7 +79,7 @@ export default function AddMember() {
       <div className="sticky top-0 bg-white/90 backdrop-blur-md p-4 shadow-sm flex items-center gap-3 z-10">
         <button
           onClick={() => router.back()}
-          className="p-2 bg-gray-100 rounded-full"
+          className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
         >
           <ArrowLeft size={18}/>
         </button>

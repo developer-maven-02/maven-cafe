@@ -34,7 +34,7 @@ export default function AdminManageMenu() {
 
         <button
           onClick={() => router.back()}
-          className="p-2 bg-gray-100 rounded-full"
+          className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
         >
           <ArrowLeft size={18}/>
         </button>

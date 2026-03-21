@@ -53,7 +53,7 @@ export default function MyOrders() {
       <div className="sticky top-0 bg-white flex items-center gap-3 p-4 shadow-sm">
         <button
           onClick={() => router.back()}
-          className="p-2 bg-gray-100 rounded-full"
+          className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
         >
           <ArrowLeft size={18} />
         </button>
@@ -117,7 +117,7 @@ export default function MyOrders() {
                 </p>
 
                 {/* Review Button */}
-                {order.status === "Delivered" && !order.rating && (
+                {order.status === "Served" && !order.rating && (
   <button
     onClick={(e) => {
       e.preventDefault();

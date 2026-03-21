@@ -65,7 +65,7 @@ export default function ManageTeam() {
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50">
 
       {/* Header */}
-      <div className="sticky top-0 bg-white p-4 shadow-sm flex items-center gap-3">
+      <div className="sticky top-0 bg-white p-4 shadow-sm flex items-center gap-3 text-[#103c7f]">
         <button
           onClick={() => router.back()}
           className="p-2 bg-gray-100 rounded-full"
@@ -115,19 +115,20 @@ export default function ManageTeam() {
               <div className="flex justify-between items-center">
 
                 <div className="flex items-center gap-3">
-                  <div className="bg-gray-100 p-2 rounded-full">
+                  <div className="bg-gray-100 p-2 rounded-full text-[#103c7f]">
                     <User size={18}/>
                   </div>
 
                   <div>
-                    <p className="font-medium text-sm">
+                    <p className="font-medium text-sm text-[#103c7f]">
                       {member.name}
                     </p>
 
-                    <p className="text-xs text-gray-500">
-                      {member.email}
-                    </p>
-
+                   <p className="text-xs text-gray-500">
+  {member.email
+    ? member.email.replace(/(.{3}).+(@.+)/, "$1***$2")
+    : ""}
+</p>
                     <p className="text-xs text-gray-500">
                       {member.role} • Joined {member.created_at?.split("T")[0]}
                     </p>
@@ -135,7 +136,7 @@ export default function ManageTeam() {
                 </div>
 
                 {/* Buttons */}
-                <div className="flex gap-2">
+                <div className="flex gap-2 text-[#103c7f]">
                   <button
                     onClick={() => router.push(`/screens/admin/team/edit/${member.id}`)}
                     className="flex items-center gap-1 text-xs px-3 py-1 bg-gray-100 rounded-lg"

@@ -110,7 +110,7 @@ export default function AddService() {
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50">
 
       {/* Header */}
-      <div className="sticky top-0 bg-white p-4 flex items-center gap-3 shadow-sm">
+      <div className="sticky top-0 bg-white p-4 flex items-center gap-3 shadow-sm text-[#103c7f]">
         <button
           onClick={() => router.back()}
           className="p-2 bg-gray-100 rounded-full"
@@ -146,7 +146,7 @@ export default function AddService() {
                   key={item.name}
                   onClick={() => setSelectedIcon(item.name)}
                   className={`p-3 rounded-lg flex items-center justify-center
-                    ${selectedIcon === item.name ? "bg-[#103c7f] text-white" : "bg-gray-100"}`}
+                    ${selectedIcon === item.name ? "bg-[#103c7f] text-white" : "bg-gray-100 text-[#103c7f]"}`}
                 >
                   <Icon size={20} />
                 </button>

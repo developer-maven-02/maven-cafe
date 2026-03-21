@@ -62,7 +62,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       </div>
 
       <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md">
-        <h2 className="text-lg font-semibold mb-6 text-center">
+        <h2 className="text-lg font-semibold mb-6 text-center text-[#103c7f]">
           Login to your account
         </h2>
 

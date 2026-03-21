@@ -73,16 +73,16 @@ export default function MenuPage() {
 </div>
         <div className="flex items-center gap-4">
           <Link href="/screens/orders/MyOrders">
-            <div className="relative">
+            <div className="relative text-[#103c7f]">
               <ShoppingBag size={22} />
-              <span className="absolute -top-1 -right-1 bg-[#a1db40] text-xs px-1 rounded-full">
+              <span className="absolute -top-1 -right-1 bg-[#a1db40] text-xs px-1 rounded-full text-[#103c7f]">
                 2
               </span>
             </div>
           </Link>
 
           <Link href="/screens/profile">
-            <User size={22} />
+            <User size={22} className="text-[#103c7f]"/>
           </Link>
         </div>
       </div>
@@ -120,7 +120,7 @@ export default function MenuPage() {
             className={`flex items-center gap-1 px-4 py-2 rounded-full text-sm whitespace-nowrap ${
               activeCategory === cat.name
                 ? "bg-[#103c7f] text-white shadow"
-                : "bg-white border border-gray-200"
+                : "bg-white border border-gray-200 text-[#103c7f]"
             }`}
           >
             {cat.icon} {cat.name}
@@ -230,7 +230,7 @@ export default function MenuPage() {
 
             <button
               onClick={() => router.push("/screens/support/complaint")}
-              className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow text-sm"
+              className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow text-sm text-[#103c7f]"
             >
               <AlertCircle size={16} />
               Complaint

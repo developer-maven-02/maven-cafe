@@ -150,18 +150,18 @@ function ReviewInner() {
   return (
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50">
       <div className="flex items-center gap-3 p-4 bg-white border-b">
-        <button onClick={() => router.back()}>
+        <button onClick={() => router.back()} className="text-[#103c7f]">
           <ArrowLeft size={20} />
         </button>
 
         <h1 className="font-semibold text-lg text-[#103c7f]">
-          Cafeteria Review
+          Review
         </h1>
       </div>
 
       <div className="p-4 space-y-5">
         <div className="bg-white rounded-xl p-4 shadow-sm">
-          <p className="text-sm font-medium mb-3">Rate your experience</p>
+          <p className="text-sm font-medium mb-3 text-[#103c7f]">Rate your experience</p>
 
           <div className="flex gap-2">
             {[1, 2, 3, 4, 5].map((star) => (
@@ -172,7 +172,7 @@ function ReviewInner() {
                 className={`cursor-pointer ${
                   rating >= star
                     ? "text-yellow-400 fill-yellow-400"
-                    : "text-gray-300"
+                    : "text-gray-300 text-[#103c7f]"
                 }`}
               />
             ))}
@@ -180,7 +180,7 @@ function ReviewInner() {
         </div>
 
         <div className="bg-white rounded-xl p-4 shadow-sm">
-          <p className="text-sm font-medium mb-2">Comments</p>
+          <p className="text-sm font-medium mb-2 text-[#103c7f]">Comments</p>
 
           <textarea
             placeholder="Share your feedback..."

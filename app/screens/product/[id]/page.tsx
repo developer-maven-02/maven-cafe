@@ -77,12 +77,12 @@ export default function ItemDetails() {
       <div className="sticky top-0 bg-white flex items-center gap-3 p-4 shadow-sm z-20">
         <button
           onClick={() => router.back()}
-          className="p-2 bg-gray-100 rounded-full"
+          className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
         >
           <ArrowLeft size={18} />
         </button>
 
-        <h1 className="font-semibold text-lg">{item.name}</h1>
+        <h1 className="font-semibold text-lg text-[#103c7f]">{item.name}</h1>
       </div>
 
       <img
@@ -102,7 +102,7 @@ export default function ItemDetails() {
         {item.category === "Beverage" && (
           <>
             <div className="bg-white p-4 rounded-xl shadow-md">
-              <p className="text-sm font-medium mb-3">Temperature</p>
+              <p className="text-sm font-medium mb-3 text-[#103c7f]">Temperature</p>
 
               <div className="flex gap-2">
                 {["Hot", "Cold"].map((temp) => (
@@ -112,7 +112,7 @@ export default function ItemDetails() {
                     className={`px-4 py-2 rounded-full text-sm ${
                       temperature === temp
                         ? "bg-[#103c7f] text-white"
-                        : "bg-gray-100"
+                        : "bg-gray-100 text-[#103c7f]"
                     }`}
                   >
                     {temp}
@@ -122,7 +122,7 @@ export default function ItemDetails() {
             </div>
 
             <div className="bg-white p-4 rounded-xl shadow-md">
-              <p className="text-sm font-medium mb-3">Select Type</p>
+              <p className="text-sm font-medium mb-3 text-[#103c7f]">Select Type</p>
 
               <div className="flex gap-2">
                 {["Milk", "Black"].map((t) => (
@@ -132,7 +132,7 @@ export default function ItemDetails() {
                     className={`px-4 py-2 rounded-full text-sm ${
                       type === t
                         ? "bg-[#103c7f] text-white"
-                        : "bg-gray-100"
+                        : "bg-gray-100 text-[#103c7f]"
                     }`}
                   >
                     {t}
@@ -142,7 +142,7 @@ export default function ItemDetails() {
             </div>
 
             <div className="bg-white p-4 rounded-xl shadow-md">
-              <p className="text-sm font-medium mb-3">Sugar Level</p>
+              <p className="text-sm font-medium mb-3 text-[#103c7f]">Sugar Level</p>
 
               <div className="flex gap-2">
                 {[0, 1, 2, 3].map((s) => (
@@ -152,7 +152,7 @@ export default function ItemDetails() {
                     className={`w-10 h-10 rounded-full ${
                       sugar === s
                         ? "bg-[#103c7f] text-white"
-                        : "bg-gray-200"
+                        : "bg-gray-200 text-[#103c7f]"
                     }`}
                   >
                     {s}
@@ -165,17 +165,17 @@ export default function ItemDetails() {
 
         {/* Quantity */}
         <div className="bg-white p-4 rounded-xl shadow-md">
-          <p className="text-sm font-medium mb-3">Quantity</p>
+          <p className="text-sm font-medium mb-3 text-[#103c7f]">Quantity</p>
 
           <div className="flex items-center gap-4">
             <button
               onClick={() => setQty(Math.max(1, qty - 1))}
-              className="p-2 bg-gray-200 rounded-lg"
+              className="p-2 bg-gray-200 rounded-lg text-[#103c7f]"
             >
               <Minus size={16} />
             </button>
 
-            <span className="font-semibold text-lg">{qty}</span>
+            <span className="font-semibold text-lg text-[#103c7f]">{qty}</span>
 
             <button
               onClick={() => setQty(qty + 1)}
@@ -186,7 +186,7 @@ export default function ItemDetails() {
           </div>
         </div>
         <div className="bg-white p-4 rounded-xl shadow-md">
-  <p className="text-sm font-medium mb-2">Delivery Location</p>
+  <p className="text-sm font-medium mb-2 text-[#103c7f]">Delivery Location</p>
 
   <div className="bg-gray-100 rounded-lg p-3 text-sm text-gray-700 shadow-inner">
     {seat}
@@ -195,13 +195,13 @@ export default function ItemDetails() {
 
         {/* Notes */}
         <div className="bg-white p-4 rounded-xl shadow-md">
-          <p className="text-sm font-medium mb-2">Special Instructions</p>
+          <p className="text-sm font-medium mb-2 text-[#103c7f]">Special Instructions</p>
 
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
-            className="w-full rounded-lg p-2 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#103c7f]"
+  className="w-full rounded-lg p-2 text-sm bg-black text-white caret-white border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#103c7f]"
           />
         </div>
       </div>

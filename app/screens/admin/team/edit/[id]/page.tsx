@@ -71,7 +71,7 @@ export default function EditMember() {
   return (
     <div className="max-w-[420px] mx-auto min-h-screen bg-white">
 
-      <div className="sticky top-0 bg-white p-4 shadow-sm flex items-center gap-3">
+      <div className="sticky top-0 bg-white p-4 shadow-sm flex items-center gap-3 text-[#103c7f]">
         <button onClick={() => router.back()}>
           <ArrowLeft size={18}/>
         </button>
@@ -81,7 +81,7 @@ export default function EditMember() {
       <div className="p-4 space-y-4">
 
         <div className="flex items-center gap-2 border rounded-lg p-3">
-          <User size={16}/>
+          <User size={16} className="text-[#103c7f]"/>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -90,7 +90,7 @@ export default function EditMember() {
         </div>
 
         <div className="flex items-center gap-2 border rounded-lg p-3">
-          <Mail size={16}/>
+          <Mail size={16} className="text-[#103c7f]"/>
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -99,7 +99,7 @@ export default function EditMember() {
         </div>
 
         <div className="flex items-center gap-2 border rounded-lg p-3">
-          <Shield size={16}/>
+          <Shield size={16} className="text-[#103c7f]"/>
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
@@ -112,7 +112,7 @@ export default function EditMember() {
         </div>
 
         <div className="flex items-center gap-2 border rounded-lg p-3">
-          <MapPin size={16}/>
+          <MapPin size={16} className="text-[#103c7f]"/>
           <input
             value={seat}
             onChange={(e) => setSeat(e.target.value)}
@@ -130,7 +130,7 @@ export default function EditMember() {
         </select>
 
         <div className="flex items-center gap-2 border rounded-lg p-3">
-          <Lock size={16}/>
+          <Lock size={16} className="text-[#103c7f]"/>
           <input
             type="password"
             placeholder="New Password optional"

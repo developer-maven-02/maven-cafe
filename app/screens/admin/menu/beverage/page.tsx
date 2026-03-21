@@ -46,7 +46,7 @@ export default function BeveragesManagement() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.back()}
-            className="p-2 bg-gray-100 rounded-full"
+            className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
           >
             <ArrowLeft size={18} />
           </button>
@@ -87,7 +87,7 @@ export default function BeveragesManagement() {
                     `/screens/admin/menu/beverage/AddBeverage/${item.id}`
                   )
                 }
-                className="flex items-center gap-1 px-3 py-1 bg-gray-100 rounded-lg text-sm"
+                className="flex items-center gap-1 px-3 py-1 bg-gray-100 rounded-lg text-sm text-[#103c7f]"
               >
                 <Pencil size={14} />
                 Edit

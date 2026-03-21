@@ -115,19 +115,19 @@ const [seat, setSeat] = useState("");
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.back()}
-            className="p-2 bg-gray-100 rounded-full"
+            className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
           >
             <ArrowLeft size={18} />
           </button>
 
-          <h1 className="font-semibold text-lg">
+          <h1 className="font-semibold text-lg text-[#103c7f]">
             Service Request
           </h1>
         </div>
 
         <button
           onClick={() => router.push("/screens/orders/ServiceOrder")}
-          className="p-2 bg-gray-100 rounded-full"
+          className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
         >
           <ClipboardList size={18} />
         </button>
@@ -137,7 +137,7 @@ const [seat, setSeat] = useState("");
 
         {/* Services */}
         <div className="bg-white p-4 rounded-xl shadow-md">
-          <p className="text-sm font-semibold mb-3">Select Service</p>
+          <p className="text-sm font-semibold mb-3 text-[#103c7f]">Select Service</p>
 
           <div className="grid grid-cols-2 gap-3">
             {services.map((s) => {
@@ -150,7 +150,7 @@ const [seat, setSeat] = useState("");
                   className={`flex flex-col items-center justify-center gap-2 p-4 rounded-xl transition shadow-sm ${
                     service === s.name
                       ? "bg-[#103c7f] text-white"
-                      : "bg-gray-100"
+                      : "bg-gray-100 text-[#103c7f]"
                   }`}
                 >
                   <Icon size={22} />
@@ -163,7 +163,7 @@ const [seat, setSeat] = useState("");
 
         {/* Seat */}
         <div className="bg-white p-4 rounded-xl shadow-md">
-          <p className="text-sm font-medium mb-2">Delivery Location</p>
+          <p className="text-sm font-medium mb-2 text-[#103c7f]">Delivery Location</p>
 
           <div className="bg-gray-100 rounded-lg p-3 text-sm text-gray-700 shadow-inner">
           {seat}
@@ -172,14 +172,14 @@ const [seat, setSeat] = useState("");
 
         {/* Quick Notes */}
         <div className="bg-white p-4 rounded-xl shadow-md">
-          <p className="text-sm font-semibold mb-3">Quick Notes</p>
+          <p className="text-sm font-semibold mb-3 text-[#103c7f]">Quick Notes</p>
 
           <div className="flex flex-wrap gap-2">
             {quickNotes.map((q) => (
               <button
                 key={q.id}
                 onClick={() => setNotes(q.text)}
-                className="px-3 py-1 bg-gray-100 rounded-full text-xs shadow-sm"
+                className="px-3 py-1 bg-gray-100 rounded-full text-xs shadow-sm text-[#103c7f]"
               >
                 {q.text}
               </button>
@@ -189,14 +189,14 @@ const [seat, setSeat] = useState("");
 
         {/* Notes */}
         <div className="bg-white p-4 rounded-xl shadow-md">
-          <p className="text-sm font-semibold mb-2">Additional Notes</p>
+          <p className="text-sm font-semibold mb-2 text-[#103c7f]">Additional Notes</p>
 
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Write your request..."
             rows={3}
-            className="w-full rounded-lg p-3 text-sm bg-gray-100 focus:outline-none"
+  className="w-full rounded-lg p-2 text-sm bg-black text-white caret-white border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#103c7f]"
           />
         </div>
 

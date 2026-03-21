@@ -61,7 +61,7 @@ export default function ServiceRequestsOverview() {
       <div className="sticky top-0 bg-white flex items-center gap-3 p-4 shadow-sm z-10">
         <button
           onClick={() => router.back()}
-          className="p-2 bg-gray-100 rounded-full"
+          className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
         >
           <ArrowLeft size={18} />
         </button>
@@ -86,7 +86,7 @@ export default function ServiceRequestsOverview() {
             placeholder="Search by customer name"
             value={searchName}
             onChange={(e) => setSearchName(e.target.value)}
-            className="w-full bg-gray-100 rounded-lg p-2 outline-none"
+  className="w-full bg-gray-100 rounded-lg p-2 outline-none border border-gray-300"
           />
 
           <div className="grid grid-cols-2 gap-2">
