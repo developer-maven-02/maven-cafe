@@ -19,20 +19,20 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage(async function (payload) {
   console.log("[firebase-messaging-sw.js] Order background message:", payload);
 
-  const notificationTitle =
-    payload.data?.title || "☕ New Order Received!";
+  // const notificationTitle =
+  //   payload.data?.title || "☕ New Order Received!";
 
-  const notificationOptions = {
-    body: payload.data?.body || "A customer placed a new order",
-    icon: "/logo.png",
-    badge: "/logo.png",
-    tag: "order-notification",
-    requireInteraction: true,
-    renotify: true,
-  };
+  // const notificationOptions = {
+  //   body: payload.data?.body || "A customer placed a new order",
+  //   icon: "/logo.png",
+  //   badge: "/logo.png",
+  //   tag: "order-notification",
+  //   requireInteraction: true,
+  //   renotify: true,
+  // };
 
-  await self.registration.showNotification(
-    notificationTitle,
-    notificationOptions
-  );
+  // await self.registration.showNotification(
+  //   notificationTitle,
+  //   notificationOptions
+  // );
 });
