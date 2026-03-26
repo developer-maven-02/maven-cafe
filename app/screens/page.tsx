@@ -18,6 +18,7 @@ import { get } from "@/lib/api";
 const categories = [
   { name: "Beverage", icon: "☕" },
   { name: "Food", icon: "🍔" },
+  { name: "Combo", icon: "🥪" },
   { name: "Special Services", icon: "⭐" },
 ];
 
@@ -181,41 +182,54 @@ export default function MenuPage() {
           !error &&
           activeCategory !== "Special Services" &&
           filteredItems.map((item: any) => (
-            <div
-              key={item.id}
-              className="flex bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
-            >
-              <img
-                src={item.image}
-                className="w-24 h-24 object-cover"
-                alt={item.name}
-              />
+           <div
+  key={item.id}
+  className="flex bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+>
+  <div className="w-24 h-24 bg-gray-50 flex items-center justify-center">
+    <img
+      src={item.image}
+      className="w-full h-full object-cover"
+      alt={item.name}
+    />
+  </div>
 
-              <div className="flex flex-col justify-between flex-1 p-3">
-                <div>
-                  <h3 className="font-medium text-gray-800">
-                    {item.name}
-                  </h3>
+  <div className="flex flex-col justify-between flex-1 p-3">
+    <div>
+      <h3 className="font-medium text-gray-800 text-sm">
+        {item.name}
+      </h3>
 
-                  <p className="text-xs text-gray-500">
-                    {item.description}
-                  </p>
-                </div>
+      <p className="text-xs text-gray-500 line-clamp-2">
+        {item.description}
+      </p>
+    </div>
 
-                <button
-                  onClick={() =>
-                    router.push(`/screens/product/${item.id}`)
-                  }
-                  className="bg-[#103c7f] text-white text-sm px-4 py-1.5 rounded-lg w-fit"
-                >
-                  Order Now
-                </button>
-              </div>
-            </div>
+    <div className="flex items-center justify-between mt-2">
+  <button
+    onClick={() =>
+      router.push(`/screens/product/${item.id}`)
+    }
+    className="bg-[#103c7f] text-white text-xs px-3 py-1.5 rounded-lg"
+  >
+    Order Now
+  </button>
+
+  <p
+    className={`font-semibold text-sm ${
+      Number(item.price) == 0
+        ? "text-green-600"
+        : "text-[#103c7f]"
+    }`}
+  >
+    {Number(item.price) == 0 ? "Free" : `₹${item.price}`}
+  </p>
+</div>  </div>
+</div>
           ))}
       </div>
 
-      {/* Floating Support */}
+      {/* 
       <div className="fixed bottom-6 right-6 flex flex-col items-end gap-3">
 
         {showOptions && (
@@ -226,7 +240,7 @@ export default function MenuPage() {
             >
               <MessageSquare size={16} />
               Review
-            </button> */}
+            </button> 
 
             <button
               onClick={() => router.push("/screens/support/complaint")}
@@ -245,7 +259,7 @@ export default function MenuPage() {
           <Headphones size={24} />
         </button>
 
-      </div>
+      </div> */}
     </div>
   );
 }

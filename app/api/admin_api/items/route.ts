@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     const description = formData.get("description") as string;
     const category = formData.get("category") as string;
     const is_available = formData.get("is_available") as string;
-
+    const price = formData.get("price") as string;
     const file = formData.get("image") as File | null; // uploaded file
     let imageUrl = null;
 
@@ -63,7 +63,8 @@ export async function POST(req: Request) {
     // Insert into Supabase DB
     const { data: itemData, error: dbError } = await supabaseServer
       .from("items")
-      .insert([{ name, description, category, is_available, image: imageUrl }])
+      .insert([{ name, description, category,    price,
+ is_available, image: imageUrl }])
       .select()
       .single();
 

@@ -45,13 +45,28 @@ export async function PATCH(
     const { id } = await params;
     const body = await req.json();
 
+
+    
+
+       const updatePayload: any = {
+      status: body.status,
+      rejected_reason: body.rejected_reason || null,
+      updated_at: new Date().toISOString(),
+    };
+
+    // Set start_time when status is "Processing"
+    if (body.status === "Processing") {
+      updatePayload.start_time = body.start_time;
+    }
+
+    // Set end_time when status is "Completed"
+    if (body.status === "Completed") {
+      updatePayload.end_time = body.end_time;
+    }
+
     const { data, error } = await supabaseServer
       .from("customer_service_requests")
-      .update({
-        status: body.status,
-        rejected_reason: body.rejected_reason || null,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updatePayload)
       .eq("id", id)
       .select()
       .single();

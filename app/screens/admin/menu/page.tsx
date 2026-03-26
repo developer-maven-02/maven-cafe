@@ -2,28 +2,33 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, UtensilsCrossed, Coffee, Sparkles } from "lucide-react";
+import { ArrowLeft, UtensilsCrossed, Coffee, Sparkles,ClipboardList } from "lucide-react";
 
 export default function AdminManageMenu() {
 
   const router = useRouter();
 
   const catalog = [
-    {
-      name: "Food",
-      icon: <UtensilsCrossed size={26} />,
-      link: "/screens/admin/menu/food"
-    },
-    {
-      name: "Beverages",
-      icon: <Coffee size={26} />,
-      link: "/screens/admin/menu/beverage"
-    },
+    // {
+    //   name: "Food",
+    //   icon: <UtensilsCrossed size={26} />,
+    //   link: "/screens/admin/menu/food"
+    // },
+    // {
+    //   name: "Beverages",
+    //   icon: <Coffee size={26} />,
+    //   link: "/screens/admin/menu/beverage"
+    // },
     {
       name: "Special Services",
       icon: <Sparkles size={26} />,
       link: "/screens/admin/menu/specialService"
-    }
+    },
+    {
+  name: "Menu Items",
+  icon: <ClipboardList size={26} />,
+  link: "/screens/admin/menu/orders"
+}
   ];
 
   return (

@@ -46,6 +46,18 @@ export default function MyOrders() {
       icon: <Clock size={14} />,
     };
   };
+  const formatTakenTime = (start, end) => {
+  if (!start || !end) return null;
+
+  const diff = Math.floor(
+    (new Date(end).getTime() - new Date(start).getTime()) / 1000
+  );
+
+  const mins = Math.floor(diff / 60);
+  const secs = diff % 60;
+
+  return `${mins}m ${secs}s`;
+};
 
   return (
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50">
@@ -88,18 +100,26 @@ export default function MyOrders() {
             >
               <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
                 {/* Header */}
-                <div className="flex justify-between items-center mb-2">
-                  <h2 className="font-semibold text-gray-800">
-                    Order #{order.id.slice(0, 6)}
-                  </h2>
+                <div className="flex justify-between items-start mb-2">
+  <h2 className="font-semibold text-gray-800">
+    Order #{order.id.slice(0, 6)}
+  </h2>
 
-                  <span
-                    className={`flex items-center gap-1 text-xs px-3 py-1 rounded-full ${status.color}`}
-                  >
-                    {status.icon}
-                    {order.status}
-                  </span>
-                </div>
+  <div className="flex flex-col items-end">
+    <span
+      className={`flex items-center gap-1 text-xs px-3 py-1 rounded-full ${status.color}`}
+    >
+      {status.icon}
+      {order.status}
+    </span>
+
+    {order.start_time && order.end_time && (
+      <p className="text-[11px] text-green-600 mt-1">
+        ⏱ {formatTakenTime(order.start_time, order.end_time)}
+      </p>
+    )}
+  </div>
+</div>
 
                 {/* Item */}
                 <p className="text-sm text-gray-700">

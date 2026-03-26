@@ -89,11 +89,21 @@ export async function PATCH(
       );
     }
 
-    const updateData = {
-      status: body.status,
-      rejected_reason: body.reject_reason || null,
-      updated_at: new Date().toISOString(),
-    };
+    const updateData: any = {
+  status: body.status,
+  rejected_reason: body.reject_reason || null,
+  updated_at: new Date().toISOString(),
+};
+
+console.log('body.start_time',body.start_time);
+
+if (body.status === "Accepted") {
+  updateData.start_time = body.start_time;
+}
+
+if (body.status === "Served") {
+  updateData.end_time = body.end_time;
+}
 
     const { data, error } = await supabaseServer
       .from("orders")

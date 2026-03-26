@@ -4,10 +4,10 @@ import { supabaseServer } from "@/lib/supabase-server";
 export async function GET() {
   try {
     const { data, error } = await supabaseServer
-      .from("orders")
-      .select("*")
-      .order("created_at", { ascending: false });
-
+  .from("orders")
+  .select("*")
+  .in("status", ["Served", "Rejected"])
+  .order("created_at", { ascending: false });
     if (error) {
       return NextResponse.json({
         success: false,

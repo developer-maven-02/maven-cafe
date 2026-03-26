@@ -81,6 +81,13 @@ export default function AdminDashboard() {
     path: "/screens/admin/request",
     color: "bg-orange-500 text-white"
   },
+  {
+    label: "Inventory",
+    icon: ClipboardList,
+    path: "/screens/admin/inventory",
+    color: "bg-emerald-600 text-white"
+  },
+
     {
       label: "Manage Menu",
       icon: UtensilsCrossed,

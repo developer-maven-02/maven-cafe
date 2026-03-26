@@ -12,6 +12,8 @@ type Order = {
   seat: string;
   status: string;
   created_at: string;
+  start_time?: string;
+  end_time?: string;
   rejected_reason?: string;
   review?: string;
   rating?: number;
@@ -42,6 +44,19 @@ export default function OrdersOverview() {
       console.log(error);
     }
   };
+
+  const formatTakenTime = (start?: string, end?: string) => {
+  if (!start || !end) return null;
+
+  const diff = Math.floor(
+    (new Date(end).getTime() - new Date(start).getTime()) / 1000
+  );
+
+  const mins = Math.floor(diff / 60);
+  const secs = diff % 60;
+
+  return `${mins}m ${secs}s`;
+};
 
   useEffect(() => {
     fetchOrders();
@@ -148,17 +163,25 @@ export default function OrdersOverview() {
             key={order.id}
             className="bg-white rounded-xl p-4 shadow-sm"
           >
-            <div className="flex justify-between mb-2">
-              <p className="font-semibold text-gray-800">
-                Order #{order.id.slice(0, 8)}
-              </p>
+           <div className="flex justify-between mb-2">
+  <p className="font-semibold text-gray-800">
+    Order #{order.id.slice(0, 8)}
+  </p>
 
-              <span
-                className={`text-xs px-3 py-1 rounded-full ${getStatusColor(order.status)}`}
-              >
-                {order.status}
-              </span>
-            </div>
+  <div className="flex flex-col items-end">
+    <span
+      className={`text-xs px-3 py-1 rounded-full ${getStatusColor(order.status)}`}
+    >
+      {order.status}
+    </span>
+
+    {order.start_time && order.end_time && (
+      <p className="text-[11px] text-green-600 mt-1">
+        ⏱ {formatTakenTime(order.start_time, order.end_time)}
+      </p>
+    )}
+  </div>
+</div> 
 
             <p className="text-sm text-gray-700">
               Item: {order.item_name}

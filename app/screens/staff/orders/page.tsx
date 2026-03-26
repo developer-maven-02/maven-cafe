@@ -13,19 +13,32 @@ type Order = {
   seat: string;
   notes: string;
   category: string;
+  rating?: number;
+  review?: string;
   rejected_reason?: string;
   status: string;
 };
 
+// Helper function to render stars
+const renderStars = (rating: number) => {
+  const stars = [];
+  for (let i = 1; i <= 5; i++) {
+    stars.push(
+      <span key={i} className="text-yellow-500">
+        {i <= rating ? "★" : "☆"}
+      </span>
+    );
+  }
+  return stars;
+};
+
 export default function IncomingOrders() {
   const router = useRouter();
-
   const [orders, setOrders] = useState<Order[]>([]);
 
   const fetchOrders = useCallback(async () => {
     try {
       const result = await get("/cafe_api/orders");
-
       if (result.success) {
         setOrders(result.orders ?? []);
       }
@@ -41,17 +54,22 @@ export default function IncomingOrders() {
   return (
     <div className="max-w-[420px] mx-auto min-h-screen bg-white">
 
+      {/* Header */}
       <div className="flex items-center gap-3 p-4 text-[#103c7f]">
         <button onClick={() => router.back()}>
           <ArrowLeft size={20} />
         </button>
-
-        <h1 className="text-xl font-semibold text-[#103c7f]">
-          Incoming Orders
-        </h1>
+        <h1 className="text-xl font-semibold text-[#103c7f]">Incoming Orders</h1>
       </div>
 
+      {/* Orders List */}
       <div className="p-4 space-y-4">
+
+        {orders.length === 0 && (
+          <p className="text-center text-gray-500 py-6">
+            No incoming orders
+          </p>
+        )}
 
         {orders.map((order) => (
           <div
@@ -67,42 +85,38 @@ export default function IncomingOrders() {
               {order.item_name} × {order.quantity}
             </p>
 
-            <p className="text-sm text-gray-600">
-              Name: {order.user_name}
-            </p>
-
-            <p className="text-sm text-gray-600">
-              Seat: {order.seat}
-            </p>
-
-            <p className="text-xs text-blue-600">
-              {order.category}
-            </p>
-
-            <p className="text-xs text-yellow-600">
-              {order.status}
-            </p>
+            <p className="text-sm text-gray-600">Name: {order.user_name}</p>
+            <p className="text-sm text-gray-600">Seat: {order.seat}</p>
+            <p className="text-xs text-blue-600">{order.category}</p>
+            <p className="text-xs text-yellow-600">{order.status}</p>
 
             {order.notes && (
-              <p className="text-xs text-gray-500">
-                Note: {order.notes}
-              </p>
+              <p className="text-xs text-gray-500">Note: {order.notes}</p>
             )}
+
             {order.status === "Rejected" && order.rejected_reason && (
-  <div className="mt-2 bg-red-50 border-l-4 border-red-500 rounded-md p-2">
-    <p className="text-xs text-red-600 font-medium">
-      Rejected Reason: {order.rejected_reason}
-    </p>
-  </div>
-)}
+              <div className="mt-2 bg-red-50 border-l-4 border-red-500 rounded-md p-2">
+                <p className="text-xs text-red-600 font-medium">
+                  Rejected Reason: {order.rejected_reason}
+                </p>
+              </div>
+            )}
+
+            {/* Rating & Review with Stars */}
+            {(order.rating || order.review) && (
+              <div className="mt-2 bg-green-50 border-l-4 border-green-500 rounded-md p-2">
+                {order.rating && (
+                  <p className="text-xs text-green-700 font-medium">
+                    Rating: {renderStars(order.rating)}
+                  </p>
+                )}
+                {order.review && (
+                  <p className="text-xs text-green-700">Review: {order.review}</p>
+                )}
+              </div>
+            )}
           </div>
         ))}
-
-        {orders.length === 0 && (
-          <p className="text-center text-gray-500 py-6">
-            No incoming orders
-          </p>
-        )}
 
       </div>
     </div>
