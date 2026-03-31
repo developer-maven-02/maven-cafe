@@ -11,6 +11,7 @@ import {
   ClipboardList
 } from "lucide-react";
 import { get } from "@/lib/api";
+import Image from "next/image";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -106,15 +107,24 @@ export default function AdminDashboard() {
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50">
 
       {/* Header */}
-      <div className="bg-white p-4 shadow-sm flex items-center justify-between">
-  <div>
-    <h1 className="text-xl font-semibold text-[#103c7f]">
-      Admin Dashboard
-    </h1>
+<div className="bg-white p-4 shadow-md flex pl-0 items-center justify-between">  <div className="flex items-center gap-3">
+    <div className="w-24 h-10 relative">
+      <Image
+        src="/logo.png"
+        alt="Maven Cafe Logo"
+        fill
+        className="object-contain"
+      />
+    </div>
+    <div>
+      <h1 className="text-xl font-semibold text-[#103c7f]">
+        Admin Dashboard
+      </h1>
 
-    <p className="text-sm text-gray-500">
-      Cafeteria overview
-    </p>
+      <p className="text-sm text-gray-500">
+        Cafeteria overview
+      </p>
+    </div>
   </div>
 
   <button

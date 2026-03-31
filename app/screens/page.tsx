@@ -63,8 +63,8 @@ export default function MenuPage() {
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50 pb-24">
 
       {/* Header */}
-      <div className="sticky top-0 bg-white flex justify-between items-center p-4 border-b z-20">
-<div className="w-32 h-12 relative">
+      <div className="sticky top-0 bg-white flex justify-between items-center p-4 pl-0 border-b border-gray-200 z-20 shadow-md">
+<div className="w-18 h-12 relative">
   <Image
     src="/logo.png"
     alt="Logo"

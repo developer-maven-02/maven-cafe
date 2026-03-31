@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { get } from "@/lib/api";
+import Image from "next/image";
 
 type ServiceRequest = {
   id: string;
@@ -53,11 +54,21 @@ export default function ServiceRequests() {
     <div className="max-w-[420px] mx-auto min-h-screen bg-white">
 
       {/* Header */}
-      <div className="flex items-center gap-3 p-4 text-[#103c7f]">
-        <button onClick={() => router.back()}>
-          <ArrowLeft size={20} />
-        </button>
-        <h1 className="text-lg font-semibold text-[#103c7f]">Service Requests</h1>
+      <div className="flex items-center justify-between p-4 text-[#103c7f]">
+        <div className="flex items-center gap-3">
+          <button onClick={() => router.back()}>
+            <ArrowLeft size={20} />
+          </button>
+          <h1 className="text-lg font-semibold text-[#103c7f]">Service Requests</h1>
+        </div>
+        <div className="w-20 h-8 relative">
+          <Image
+            src="/logo.png"
+            alt="Maven Cafe Logo"
+            fill
+            className="object-contain"
+          />
+        </div>
       </div>
 
       {/* Requests List */}

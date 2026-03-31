@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { get, post } from "@/lib/api";
+import Image from "next/image";
 
 type ServiceItem = {
   id: string;
@@ -125,12 +126,22 @@ const [seat, setSeat] = useState("");
           </h1>
         </div>
 
-        <button
-          onClick={() => router.push("/screens/orders/ServiceOrder")}
-          className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
-        >
-          <ClipboardList size={18} />
-        </button>
+        <div className="flex items-center gap-3">
+          <div className="w-20 h-8 relative">
+            <Image
+              src="/logo.png"
+              alt="Maven Cafe Logo"
+              fill
+              className="object-contain"
+            />
+          </div>
+          <button
+            onClick={() => router.push("/screens/orders/ServiceOrder")}
+            className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
+          >
+            <ClipboardList size={18} />
+          </button>
+        </div>
       </div>
 
       <div className="p-4 space-y-6">

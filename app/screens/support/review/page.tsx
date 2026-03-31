@@ -110,6 +110,7 @@ import { Suspense, useState } from "react";
 import { ArrowLeft, Star } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { post } from "@/lib/api";
+import Image from "next/image";
 
 function ReviewInner() {
   const router = useRouter();
@@ -149,14 +150,24 @@ function ReviewInner() {
 
   return (
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50">
-      <div className="flex items-center gap-3 p-4 bg-white border-b">
-        <button onClick={() => router.back()} className="text-[#103c7f]">
-          <ArrowLeft size={20} />
-        </button>
+      <div className="flex items-center justify-between p-4 bg-white border-b">
+        <div className="flex items-center gap-3">
+          <button onClick={() => router.back()} className="text-[#103c7f]">
+            <ArrowLeft size={20} />
+          </button>
 
-        <h1 className="font-semibold text-lg text-[#103c7f]">
-          Review
-        </h1>
+          <h1 className="font-semibold text-lg text-[#103c7f]">
+            Review
+          </h1>
+        </div>
+        <div className="w-20 h-8 relative">
+          <Image
+            src="/logo.png"
+            alt="Maven Cafe Logo"
+            fill
+            className="object-contain"
+          />
+        </div>
       </div>
 
       <div className="p-4 space-y-5">

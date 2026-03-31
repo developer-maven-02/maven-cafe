@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Minus, Plus, ArrowLeft } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
 import { get , post} from "@/lib/api";
+import Image from "next/image";
 
 export default function ItemDetails() {
   const router = useRouter();
@@ -74,15 +75,25 @@ export default function ItemDetails() {
   return (
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50 pb-28">
 
-      <div className="sticky top-0 bg-white flex items-center gap-3 p-4 shadow-sm z-20">
-        <button
-          onClick={() => router.back()}
-          className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
-        >
-          <ArrowLeft size={18} />
-        </button>
+      <div className="sticky top-0 bg-white flex items-center justify-between p-4 shadow-sm z-20">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.back()}
+            className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
+          >
+            <ArrowLeft size={18} />
+          </button>
 
-        <h1 className="font-semibold text-lg text-[#103c7f]">{item.name}</h1>
+          <h1 className="font-semibold text-lg text-[#103c7f]">{item.name}</h1>
+        </div>
+        <div className="w-20 h-8 relative">
+          <Image
+            src="/logo.png"
+            alt="Maven Cafe Logo"
+            fill
+            className="object-contain"
+          />
+        </div>
       </div>
 
       <img

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ArrowLeft, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { post } from "@/lib/api";
+import Image from "next/image";
 export default function ComplaintPage() {
 
   const router = useRouter();
@@ -52,25 +53,33 @@ const handleSubmit = async () => {
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50">
 
       {/* Header */}
-      <div className="flex items-center gap-3 p-4 bg-white border-b">
+      <div className="flex items-center justify-between p-4 bg-white border-b">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.back()}
+            className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
+          >
+            <ArrowLeft size={18}/>
+          </button>
 
-        <button
-          onClick={() => router.back()}
-          className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
-        >
-          <ArrowLeft size={18}/>
-        </button>
+          <div>
+            <h1 className="font-semibold text-lg text-[#103c7f]">
+              Report Issue
+            </h1>
 
-        <div>
-          <h1 className="font-semibold text-lg text-[#103c7f]">
-            Report Issue
-          </h1>
-
-          <p className="text-xs text-gray-500">
-            Tell us what went wrong
-          </p>
+            <p className="text-xs text-gray-500">
+              Tell us what went wrong
+            </p>
+          </div>
         </div>
-
+        <div className="w-20 h-8 relative">
+          <Image
+            src="/logo.png"
+            alt="Maven Cafe Logo"
+            fill
+            className="object-contain"
+          />
+        </div>
       </div>
 
       {/* Content */}

@@ -16,6 +16,7 @@ import { useEffect, useState, useRef } from "react";
 import { get, post, patch } from "@/lib/api";
 import { getFirebaseMessaging } from "@/lib/firebase";
 import { getToken, onMessage } from "firebase/messaging";
+import Image from "next/image";
 
 type Order = {
   id: string;
@@ -481,7 +482,36 @@ const formatRunningTime = (startTime?: string) => {
 };
   return (
     <div className="min-h-screen bg-gray-50 p-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-[calc(100vh-2rem)]">
+      {/* Header */}
+      <div className="bg-white rounded-xl p-4 mb-4 shadow-sm flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-24 h-10 relative">
+            <Image
+              src="/logo.png"
+              alt="Maven Cafe Logo"
+              fill
+              className="object-contain"
+            />
+          </div>
+          <div>
+            <h1 className="text-xl font-semibold text-[#103c7f]">
+              Staff Dashboard
+            </h1>
+            <p className="text-sm text-gray-500">
+              Manage orders and requests
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={logout}
+          className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg text-sm"
+        >
+          <LogOut size={16} />
+          Logout
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-[calc(100vh-8rem)]">
 
         {/* LEFT PANEL */}
         <div className="bg-white rounded-xl p-4 overflow-y-auto">

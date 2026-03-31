@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { get } from "@/lib/api";
+import Image from "next/image";
 
 type Order = {
   id: string;
@@ -74,22 +75,32 @@ export default function OrdersOverview() {
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50">
 
       {/* Header */}
-      <div className="sticky top-0 bg-white flex items-center gap-3 p-4 shadow-sm z-10">
-        <button
-          onClick={() => router.back()}
-          className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
-        >
-          <ArrowLeft size={18} />
-        </button>
+      <div className="sticky top-0 bg-white flex items-center justify-between p-4 shadow-sm z-10">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.back()}
+            className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
+          >
+            <ArrowLeft size={18} />
+          </button>
 
-        <div>
-          <h1 className="font-semibold text-lg text-[#103c7f]">
-            Orders Overview
-          </h1>
+          <div>
+            <h1 className="font-semibold text-lg text-[#103c7f]">
+              Orders Overview
+            </h1>
 
-          <p className="text-xs text-gray-500">
-            View and filter restaurant orders
-          </p>
+            <p className="text-xs text-gray-500">
+              View and filter restaurant orders
+            </p>
+          </div>
+        </div>
+        <div className="w-20 h-8 relative">
+          <Image
+            src="/logo.png"
+            alt="Maven Cafe Logo"
+            fill
+            className="object-contain"
+          />
         </div>
       </div>
 

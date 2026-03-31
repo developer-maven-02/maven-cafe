@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { get, put, post } from "@/lib/api";
+import Image from "next/image";
 
 export default function Profile() {
   const router = useRouter();
@@ -62,21 +63,31 @@ export default function Profile() {
   return (
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50 pb-10">
 
-      <div className="sticky top-0 bg-white flex items-center gap-3 p-4 shadow-sm">
-        <button
-          onClick={() => router.back()}
-          className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
-        >
-          <ArrowLeft size={18} />
-        </button>
+      <div className="sticky top-0 bg-white flex items-center justify-between p-4 shadow-sm">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.back()}
+            className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
+          >
+            <ArrowLeft size={18} />
+          </button>
 
-        <div>
-          <h1 className="text-lg font-semibold text-[#103c7f]">
-            Profile
-          </h1>
-          <p className="text-xs text-gray-500">
-            Manage your account details
-          </p>
+          <div>
+            <h1 className="text-lg font-semibold text-[#103c7f]">
+              Profile
+            </h1>
+            <p className="text-xs text-gray-500">
+              Manage your account details
+            </p>
+          </div>
+        </div>
+        <div className="w-20 h-8 relative">
+          <Image
+            src="/logo.png"
+            alt="Maven Cafe Logo"
+            fill
+            className="object-contain"
+          />
         </div>
       </div>
 

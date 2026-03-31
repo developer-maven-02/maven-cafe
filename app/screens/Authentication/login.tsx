@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Mail, Lock } from "lucide-react";
+import Image from "next/image";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -19,7 +20,14 @@ export default function LoginPage() {
 
         {/* Logo */}
         <div className="text-center text-white mb-10">
-          <h1 className="text-3xl font-bold">Cafeteria</h1>
+          <div className="w-40 h-16 relative mx-auto mb-2">
+            <Image
+              src="/logo.png"
+              alt="Maven Cafe Logo"
+              fill
+              className="object-contain"
+            />
+          </div>
           <p className="text-sm opacity-80">Order food easily</p>
         </div>
 
