@@ -99,7 +99,7 @@ export default function Profile() {
             alt="Profile"
             className="w-24 h-24 rounded-full mx-auto object-cover"
           />
-
+{/* 
           <label className="block mt-3 text-sm text-[#103c7f] cursor-pointer">
             Change Photo
             <input
@@ -107,7 +107,7 @@ export default function Profile() {
               className="hidden"
               onChange={handlePhotoChange}
             />
-          </label>
+          </label> */}
         </div>
 
         <div className="bg-white rounded-xl shadow-sm p-5 space-y-4">
