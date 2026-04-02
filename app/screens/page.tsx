@@ -6,6 +6,7 @@ import {
   ShoppingBag,
   Search,
   HandHelping,
+  Heart,
   MessageSquare,
   AlertCircle,
   Headphones,
@@ -73,15 +74,38 @@ export default function MenuPage() {
   />
 </div>
         <div className="flex items-center gap-4">
-          <Link href="/screens/orders/MyOrders">
-            <div className="relative text-[#103c7f]">
-              <ShoppingBag size={22} />
-              <span className="absolute -top-1 -right-1 bg-[#a1db40] text-xs px-1 rounded-full text-[#103c7f]">
-                2
-              </span>
-            </div>
-          </Link>
 
+          
+<Link href="/screens/favorite" className="relative group">
+  <Heart size={22} className="text-[#103c7f]" />
+
+  <span
+    className="absolute left-1/2 -translate-x-1/2 top-8
+               opacity-0 group-hover:opacity-100
+               bg-[#103c7f] text-white text-xs px-2 py-1 rounded
+               transition duration-200 whitespace-nowrap"
+  >
+    Favorite
+  </span>
+</Link>
+<Link href="/screens/orders/MyOrders" className="relative group">
+  <div className="relative text-[#103c7f]">
+    <ShoppingBag size={22} />
+
+    <span className="absolute -top-1 -right-1 bg-[#a1db40] text-xs px-1 rounded-full text-[#103c7f]">
+      2
+    </span>
+  </div>
+
+  <span
+    className="absolute left-1/2 -translate-x-1/2 top-8
+               opacity-0 group-hover:opacity-100
+               bg-[#103c7f] text-white text-xs px-2 py-1 rounded
+               transition duration-200 whitespace-nowrap z-50"
+  >
+    Orders
+  </span>
+</Link>
           <Link href="/screens/profile">
             <User size={22} className="text-[#103c7f]"/>
           </Link>

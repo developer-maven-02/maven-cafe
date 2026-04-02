@@ -1,10 +1,16 @@
 "use client";
 
-import { ArrowLeft, Clock, CheckCircle, ChefHat } from "lucide-react";
+import {
+  ArrowLeft,
+  Clock,
+  CheckCircle,
+  ChefHat,
+  Heart,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { get } from "@/lib/api";
+import { get,post } from "@/lib/api";
 import Image from "next/image";
 
 export default function MyOrders() {
@@ -14,6 +20,29 @@ export default function MyOrders() {
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  const toggleFavorite = async (order) => {
+  try {
+    const updated = !order.is_favorite;
+
+    const result = await post("/orders/favorite", {
+      order_id: order.id,
+      is_favorite: updated,
+    });
+
+    if (result.success) {
+      setOrders((prev) =>
+        prev.map((item) =>
+          item.id === order.id
+            ? { ...item, is_favorite: updated }
+            : item
+        )
+      );
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   const fetchOrders = async () => {
     try {
@@ -47,23 +76,25 @@ export default function MyOrders() {
       icon: <Clock size={14} />,
     };
   };
+
   const formatTakenTime = (start, end) => {
-  if (!start || !end) return null;
+    if (!start || !end) return null;
 
-  const diff = Math.floor(
-    (new Date(end).getTime() - new Date(start).getTime()) / 1000
-  );
+    const diff = Math.floor(
+      (new Date(end).getTime() - new Date(start).getTime()) / 1000
+    );
 
-  const mins = Math.floor(diff / 60);
-  const secs = diff % 60;
+    const mins = Math.floor(diff / 60);
+    const secs = diff % 60;
 
-  return `${mins}m ${secs}s`;
-};
+    return `${mins}m ${secs}s`;
+  };
 
   return (
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50">
+
       {/* Header */}
-      <div className="sticky top-0 bg-white flex items-center justify-between p-4 shadow-sm">
+      <div className="sticky top-0 bg-white flex items-center justify-between p-4 shadow-sm z-20">
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.back()}
@@ -76,12 +107,12 @@ export default function MyOrders() {
             <h1 className="font-semibold text-lg text-[#103c7f]">
               My Orders
             </h1>
-
             <p className="text-xs text-gray-500">
               Track your active and past orders
             </p>
           </div>
         </div>
+
         <div className="w-20 h-8 relative">
           <Image
             src="/logo.png"
@@ -109,69 +140,129 @@ export default function MyOrders() {
               href={`/screens/orders/${order.id}`}
               className="block"
             >
-              <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
-                {/* Header */}
-                <div className="flex justify-between items-start mb-2">
-  <h2 className="font-semibold text-gray-800">
-    Order #{order.id.slice(0, 6)}
-  </h2>
+              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition">
 
-  <div className="flex flex-col items-end">
-    <span
-      className={`flex items-center gap-1 text-xs px-3 py-1 rounded-full ${status.color}`}
-    >
-      {status.icon}
-      {order.status}
-    </span>
+                {/* Top */}
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h2 className="font-semibold text-gray-800 text-sm">
+                      Order #{order.id.slice(0, 6)}
+                    </h2>
 
-    {order.start_time && order.end_time && (
-      <p className="text-[11px] text-green-600 mt-1">
-        ⏱ {formatTakenTime(order.start_time, order.end_time)}
-      </p>
-    )}
-  </div>
-</div>
+                    <p className="text-[11px] text-gray-400 mt-1">
+                      {new Date(order.created_at).toLocaleTimeString()}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col items-end gap-1">
+                    <span
+                      className={`flex items-center gap-1 text-[11px] px-3 py-1 rounded-full ${status.color}`}
+                    >
+                      {status.icon}
+                      {order.status}
+                    </span>
+
+                    {order.start_time && order.end_time && (
+                      <p className="text-[10px] text-green-600">
+                        ⏱ {formatTakenTime(order.start_time, order.end_time)}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-gray-100 my-3"></div>
 
                 {/* Item */}
-                <p className="text-sm text-gray-700">
-                  {order.item_name}
-                </p>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-base font-medium text-gray-800">
+                      {order.item_name}
+                    </p>
 
-                <p className="text-sm text-gray-500">
-                  Quantity: {order.quantity}
-                </p>
+                    <div className="flex flex-wrap gap-2 mt-2">
 
-                {/* Time */}
-                <p className="text-xs text-gray-500 mt-2">
-                  Ordered at{" "}
-                  {new Date(order.created_at).toLocaleTimeString()}
-                </p>
+                      {order.temperature && (
+                        <span className="text-[11px] px-2 py-1 rounded-full bg-gray-100 text-[#103c7f]">
+                          {order.temperature}
+                        </span>
+                      )}
 
-                {/* Review Button */}
-                {order.status === "Served" && !order.rating && (
-  <button
-    onClick={(e) => {
-      e.preventDefault();
-      router.push(`/screens/support/review?id=${order.id}&type=order`);
-    }}
-    className="mt-3 px-4 py-2 text-sm bg-[#103c7f] text-white rounded-lg"
+                      {order.drink_type && (
+                        <span className="text-[11px] px-2 py-1 rounded-full bg-gray-100 text-[#103c7f]">
+                          {order.drink_type}
+                        </span>
+                      )}
+
+                      {order.sugar !== null &&
+                        order.sugar !== undefined && (
+                          <span className="text-[11px] px-2 py-1 rounded-full bg-gray-100 text-[#103c7f]">
+                            Sugar {order.sugar}
+                          </span>
+                        )}
+
+                      <span className="text-[11px] px-2 py-1 rounded-full bg-[#f5f7fa] text-gray-600">
+                        Qty {order.quantity}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Favorite */}
+                  <button
+  onClick={(e) => {
+    e.preventDefault();
+    toggleFavorite(order);
+  }}
+  className="p-2 rounded-full hover:bg-gray-100 group relative"
+>
+  <Heart
+    size={18}
+    className={`${
+      order.is_favorite
+        ? "fill-red-500 text-red-500"
+        : "text-[#103c7f]"
+    }`}
+  />
+
+  <span
+    className="absolute right-0 top-8 opacity-0 group-hover:opacity-100
+               bg-[#103c7f] text-white text-xs px-2 py-1 rounded"
   >
-    Review Order
-  </button>
-)}
+    Favorite
+  </span>
+</button>
+                </div>
 
-{order.rating && (
-  <div className="mt-3 bg-gray-50 rounded-lg p-3">
-    <p className="text-sm font-medium text-gray-700">
-      Your Review
-    </p>
+                {/* Review */}
+                {order.status === "Served" && !order.rating && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push(
+                        `/screens/support/review?id=${order.id}&type=order`
+                      );
+                    }}
+                    className="mt-4 px-4 py-2 text-sm bg-[#103c7f] text-white rounded-lg"
+                  >
+                    Review Order
+                  </button>
+                )}
 
-    <p className="text-yellow-500 text-sm">
-      {"⭐".repeat(order.rating)}
-    </p>
+                {/* Existing Review */}
+                {order.rating && (
+  <div className="mt-4 bg-gray-50 rounded-lg p-3">
+    <div className="flex justify-between items-center">
+      <p className="text-sm font-medium text-gray-700">
+        Your Review
+      </p>
+
+      <p className="text-yellow-500 text-sm">
+        {"⭐".repeat(order.rating)}
+      </p>
+    </div>
 
     {order.review && (
-      <p className="text-sm text-gray-500 mt-1">
+      <p className="text-sm text-gray-500 mt-2">
         {order.review}
       </p>
     )}

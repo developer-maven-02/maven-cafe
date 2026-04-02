@@ -12,10 +12,12 @@ export async function GET(req: Request) {
         id,
         item_name,
         quantity,
+        drink_type,
         status,
         start_time,
         end_time,
         created_at,
+        is_favorite,
         rating,
         review
       `)
