@@ -27,8 +27,11 @@ type Order = {
   status: string;
   notes?: string;
   rejected_reason?: string;
-    start_time?: string;
+  start_time?: string;
   end_time?: string;
+  drink_type?: string;
+    category?: string;
+
 
 };
 type Service = {
@@ -524,7 +527,12 @@ const formatRunningTime = (startTime?: string) => {
     className="bg-gray-50 p-4 rounded-lg"
   >
 <div className="flex justify-between items-center mb-2">
-  <p className="font-medium text-[#103c7f]">{order.item_name}</p>
+<p className="font-medium text-[#103c7f]">
+  {order.category === "Beverage" && order.drink_type
+    ? `${order.drink_type} - `
+    : ""}
+  {order.item_name}
+</p> 
 
   {order.start_time &&
     ["Accepted", "Preparing", "Ready"].includes(order.status) && (

@@ -20,8 +20,8 @@ const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState("Food");
     const [price, setPrice] = useState("");
-
-  // ✅ Edit mode fetch
+const [drinkTypes, setDrinkTypes] = useState<string[]>([]);
+const [drinkInput, setDrinkInput] = useState("");  // ✅ Edit mode fetch
   useEffect(() => {
     if (id) {
       fetchItem();
@@ -31,15 +31,22 @@ const { id } = useParams();
   const fetchItem = async () => {
     try {
       const result = await get(`admin_api/items/${id}`);
+
       if (result.success) {
         const item = result.data;
+        console.log('value:',item)
         setName(item.name || "");
         setDescription(item.description || "");
         setImage(item.image || null); // API image
         setCategory(item.category || "Food");
-                setPrice(item.price || "");
-
-      }
+        setPrice(item.price || "");
+setDrinkTypes(
+  Array.isArray(item.type)
+    ? item.type
+    : item.type
+    ? JSON.parse(item.type)
+    : []
+);      }
     } catch (error) {
       console.log(error);
     }
@@ -73,6 +80,7 @@ const { id } = useParams();
       formData.append("name", name);
       formData.append("description", description);
 formData.append("category", category);
+formData.append("drink_type", `{${drinkTypes.map(t => `"${t}"`).join(",")}}`);
       formData.append("price", price);
       if (!price) {
   alert("Enter price");
@@ -132,6 +140,47 @@ formData.append("category", category);
   className="w-full bg-gray-100 rounded-lg p-2 border border-gray-300 focus:ring-2 focus:ring-[#103c7f] focus:border-[#103c7f] outline-none"
             />
           </div>
+          {category === "Beverage" && (
+  <div>
+    <p className="text-sm text-gray-500 mb-1">Drink Types</p>
+
+    <div className="flex gap-2">
+      <input
+        value={drinkInput}
+        onChange={(e) => setDrinkInput(e.target.value)}
+        placeholder="Hot / Cold"
+        className="flex-1 bg-gray-100 rounded-lg p-2 border border-gray-300 outline-none"
+      />
+
+      <button
+        type="button"
+        onClick={() => {
+          if (drinkInput.trim()) {
+            setDrinkTypes([...drinkTypes, drinkInput.trim()]);
+            setDrinkInput("");
+          }
+        }}
+        className="px-3 bg-[#103c7f] text-white rounded-lg"
+      >
+        Add
+      </button>
+    </div>
+
+    <div className="flex flex-wrap gap-2 mt-2">
+      {drinkTypes.map((type, index) => (
+        <span
+          key={index}
+          className="px-2 py-1 bg-blue-100 text-[#103c7f] rounded-full text-xs cursor-pointer"
+          onClick={() =>
+            setDrinkTypes(drinkTypes.filter((_, i) => i !== index))
+          }
+        >
+          {type} ✕
+        </span>
+      ))}
+    </div>
+  </div>
+)}
           <div>
   <p className="text-sm text-gray-500 mb-1">Category</p>
 

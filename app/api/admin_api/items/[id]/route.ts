@@ -53,6 +53,7 @@ export async function PUT(
     const category = formData.get("category") as string;
     const is_available = formData.get("is_available") as string;
     const price = formData.get("price") as string;
+     const type = formData.get("drink_type") as string;
 
     const file = formData.get("image") as File | null;
     let imageUrl: string | null = null;
@@ -93,6 +94,7 @@ export async function PUT(
         name,
         description,
         category,
+        type,
         is_available,
         price,
         image: imageUrl ?? undefined, // keep old image if no new file
