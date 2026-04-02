@@ -15,7 +15,7 @@ export default function ItemDetails() {
 
   const [temperature, setTemperature] = useState("Hot");
   const [type, setType] = useState("Milk");
-  const [sugar, setSugar] = useState(1);
+  const [sugar, setSugar] = useState(0);
   const [qty, setQty] = useState(1);
   const [notes, setNotes] = useState("");
   const [seat, setSeat] = useState("");
@@ -30,6 +30,10 @@ export default function ItemDetails() {
       if (result.success) {
         setItem(result.item);
         setSeat(result.seat || "");
+        if (result.item?.type?.length > 0) {
+          setType(result.item.type[0]); // first backend type default
+        }
+
 
       }
     } catch (error) {
@@ -132,25 +136,30 @@ export default function ItemDetails() {
               </div>
             </div>
 
-            <div className="bg-white p-4 rounded-xl shadow-md">
-              <p className="text-sm font-medium mb-3 text-[#103c7f]">Select Type</p>
+                        {item.type?.length > 0 && (
+              <div className="bg-white p-4 rounded-xl shadow-md">
+                <p className="text-sm font-medium mb-3 text-[#103c7f]">
+                  Select Type
+                </p>
 
-              <div className="flex gap-2">
-                {["Milk", "Black"].map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setType(t)}
-                    className={`px-4 py-2 rounded-full text-sm ${
-                      type === t
-                        ? "bg-[#103c7f] text-white"
-                        : "bg-gray-100 text-[#103c7f]"
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
+                <div className="flex gap-2 flex-wrap">
+                  {item.type.map((t: string) => (
+                    <button
+                      key={t}
+                      onClick={() => setType(t)}
+                      className={`px-4 py-2 rounded-full text-sm ${
+                        type === t
+                          ? "bg-[#103c7f] text-white"
+                          : "bg-gray-100 text-[#103c7f]"
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
+
 
             <div className="bg-white p-4 rounded-xl shadow-md">
               <p className="text-sm font-medium mb-3 text-[#103c7f]">Sugar Level</p>
