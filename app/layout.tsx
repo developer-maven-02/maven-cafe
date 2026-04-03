@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Maven Cafe",
   description: "Cafe ordering app",
   icons: {
-    icon: "/logo.png",
+    icon: "/favicon.png",
   },
 
 };
