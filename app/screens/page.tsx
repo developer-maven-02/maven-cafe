@@ -92,7 +92,7 @@ export default function MenuPage() {
 
     if (result.success) {
 
-      setCombos(result.combos);
+      setCombos([]);
     }
   } catch (error) {
     console.error(error);
@@ -141,7 +141,7 @@ export default function MenuPage() {
     <div className="max-w-[420px] mx-auto min-h-screen bg-[#f7f9fc] pb-24">
 
       {/* Header */}
-<div className="sticky top-0 z-20 bg-[#103c7f] px-4 pt-7 pb-8 overflow-hidden rounded-b-3xl shadow-lg">
+<div className="sticky top-0 z-20 bg-[#103c7f] px-4 pt-2 pb-2 overflow-hidden rounded-b-3xl shadow-lg">
 
   <div className="flex justify-between items-center mb-5">
 
@@ -165,9 +165,9 @@ export default function MenuPage() {
 
     {/* Right Side */}
     <div className="flex items-center gap-4 text-white">
-      <Link href="/screens/combo">
+      {/* <Link href="/screens/combo">
         <Gift size={22} />
-      </Link>
+      </Link> */}
 
       <Link href="/screens/favorite">
         <Heart size={22} />
@@ -210,11 +210,11 @@ export default function MenuPage() {
         <div className="bg-gradient-to-r from-[#103c7f] to-[#1d4e89] rounded-2xl p-4 text-[#103c7f] shadow-md flex justify-between items-center">
 
           <div>
-            <h2 className="text-m font-bold">
+            <h2 className="text-m font-bold text-white">
 Maven Cafe Welcomes You 🌟
             </h2>
 
-            <p className="text-sm opacity-90">
+            <p className="text-sm opacity-90 text-white">
               Quality coffee, fresh food, <><br /></>always ready
             </p>
 

@@ -34,6 +34,7 @@ type Order = {
   drink_type?: string;
     category?: string;
 
+  created_at?: string;
 
 };
 type Service = {
@@ -45,6 +46,8 @@ type Service = {
     end_time?: string;
 
   status: string;
+    created_at?: string;
+
 };
 
 
@@ -148,8 +151,44 @@ const playBeep = () => {
       const result = await get("/cafe_api/dashboard");
        console.log('check:',result.liveServices)
       if (result.success) {
-        setLiveOrders(result.liveOrders || []);
-        setLiveServices(result.liveServices || []);
+setLiveOrders((prev) => {
+  const incoming = result.liveOrders || [];
+
+  const merged = [
+    ...incoming.filter(
+      (n: Order) => !prev.some((oldOrder) => oldOrder.id === n.id)
+    ),
+    ...prev.map((oldOrder) => {
+      const updated = incoming.find((n: Order) => n.id === oldOrder.id);
+      return updated || oldOrder;
+    }),
+  ];
+
+  return merged.sort(
+    (a, b) =>
+      new Date(b.created_at || "").getTime() -
+      new Date(a.created_at || "").getTime()
+  );
+});
+setLiveServices((prev) => {
+  const incoming = result.liveServices || [];
+
+  const merged = [
+    ...incoming.filter(
+      (n: Service) => !prev.some((oldService) => oldService.id === n.id)
+    ),
+    ...prev.map((oldService) => {
+      const updated = incoming.find((n: Service) => n.id === oldService.id);
+      return updated || oldService;
+    }),
+  ];
+
+  return merged.sort(
+    (a, b) =>
+      new Date(b.created_at || "").getTime() -
+      new Date(a.created_at || "").getTime()
+  );
+});
         setCompletedCount(result.completedCount || 0);
         setRejectedCount(result.rejectedCount || 0);
         setTotalServiceCount(result.totalServiceCount || 0);
@@ -356,6 +395,8 @@ const updateOrderStatus = async (
   newStatus: string,
   reject_reason?: string
 ) => {
+
+  console.log(id, newStatus, reject_reason);
   try {
      const payload: any = {
       status: newStatus,
@@ -375,6 +416,7 @@ const updateOrderStatus = async (
     const result = await patch(`/cafe_api/orders/${id}`, payload);
 
     if (result.success) {
+      console.log("✅ Order status updated:", result);
       fetchDashboard();
     }
   } catch (error) {
@@ -636,10 +678,10 @@ const formatRunningTime = (startTime?: string) => {
                 )}
               </td>
 
-              <td className="p-3">x{order.quantity || 1}</td>
-              <td className="p-3">{order.user_name}</td>
-              <td className="p-3">{order.seat}</td>
-              <td className="p-3">{order.status}</td>
+            <td className="p-3 text-black">x{order.quantity || 1}</td>
+              <td className="p-3 text-black">{order.user_name}</td>
+              <td className="p-3 text-black">{order.seat}</td>
+              <td className="p-3 text-black">{order.status}</td>
 
               <td className="p-3 text-green-600">
                 {order.start_time &&

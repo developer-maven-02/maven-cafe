@@ -59,7 +59,7 @@ export async function GET() {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
     const formattedDate = thirtyDaysAgo.toISOString();
-
+   console.log("Fetching data since:", formattedDate);
 const { data: liveOrders } = await supabaseServer
   .from("orders")
   .select("*")
