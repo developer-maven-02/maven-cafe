@@ -32,6 +32,9 @@ export async function POST(req: Request) {
       notes,
     } = await req.json();
 
+
+    console.log('drink_type:',drink_type);
+
     // Fetch user
     const { data: user } = await supabaseServer
       .from("users")
@@ -53,6 +56,8 @@ export async function POST(req: Request) {
       );
     }
 
+    console.log("Item fetched:", item);
+
     // Insert order
     const { data: order, error: orderError } = await supabaseServer
       .from("orders")
@@ -62,6 +67,7 @@ export async function POST(req: Request) {
           user_name: user.name,
           item_id: item.id,
           item_name: item.name,
+          item_image: item.image,
           category: item.category,
           quantity,
           seat: seat,

@@ -120,7 +120,7 @@ export default function ItemDetails() {
               <p className="text-sm font-medium mb-3 text-[#103c7f]">Temperature</p>
 
               <div className="flex gap-2">
-                {["Hot", "Cold"].map((temp) => (
+                {["Hot", "Cold","Normal"].map((temp) => (
                   <button
                     key={temp}
                     onClick={() => setTemperature(temp)}

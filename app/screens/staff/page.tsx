@@ -6,7 +6,8 @@ import {
   Wrench,
   CheckCircle,
   XCircle,
-  User,  
+  User, 
+  Package, 
   LogOut
 
 } from "lucide-react";
@@ -21,6 +22,7 @@ import Image from "next/image";
 type Order = {
   id: string;
   item_name: string;
+  item_image: string;
   quantity?: number;
   user_name: string;
   seat: string;
@@ -483,413 +485,305 @@ const formatRunningTime = (startTime?: string) => {
 
   return `${mins}m ${secs}s`;
 };
-  return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      {/* Header */}
-      <div className="bg-white rounded-xl p-4 mb-4 shadow-sm flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-24 h-10 relative">
-            <Image
-              src="/logo.png"
-              alt="Maven Cafe Logo"
-              fill
-              className="object-contain"
-            />
-          </div>
-          <div>
-            <h1 className="text-xl font-semibold text-[#103c7f]">
-              Staff Dashboard
-            </h1>
-            <p className="text-sm text-gray-500">
-              Manage orders and requests
-            </p>
-          </div>
+ return (
+  <div className="h-screen overflow-hidden bg-gray-50 flex flex-col p-4">
+
+    {/* Header */}
+    <div className="bg-white rounded-xl p-4 mb-4 shadow-sm flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <div className="w-24 h-10 relative">
+          <Image
+            src="/logo.png"
+            alt="Maven Cafe Logo"
+            fill
+            className="object-contain"
+          />
         </div>
+
+        <div>
+          <h1 className="text-xl font-semibold text-[#103c7f]">
+            Staff Dashboard
+          </h1>
+          <p className="text-sm text-gray-500">
+            Manage live orders and requests
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => router.push("/screens/staff/orders")}
+          className="p-2 rounded-lg hover:bg-gray-100"
+        >
+          <ClipboardList size={20} className="text-[#103c7f]" />
+        </button>
+
+        <button
+          onClick={() => router.push("/screens/staff/service-requests")}
+          className="p-2 rounded-lg hover:bg-gray-100"
+        >
+          <Wrench size={20} className="text-[#103c7f]" />
+        </button>
+         <button
+    onClick={() => router.push("/screens/staff/inventory")}
+    className="p-2 rounded-lg hover:bg-gray-100"
+  >
+    <Package size={20} className="text-[#103c7f]" />
+  </button> 
         <button
           onClick={logout}
-          className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg text-sm"
+          className="p-2 rounded-lg hover:bg-gray-100"
         >
-          <LogOut size={16} />
-          Logout
+          <LogOut size={20} className="text-red-500" />
         </button>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-[calc(100vh-8rem)]">
-
-        {/* LEFT PANEL */}
-        <div className="bg-white rounded-xl p-4 overflow-y-auto">
-          <h2 className="text-[#103c7f] text-lg font-semibold mb-4">Live Orders / Requests</h2>
-
-          <div className="space-y-3">
-            {liveOrders.map((order) => (
-  <div
-    key={order.id}
-    className="bg-gray-50 p-4 rounded-lg"
-  >
-<div className="flex justify-between items-center mb-2">
-<p className="font-medium text-[#103c7f]">
-  {order.category === "Beverage" && order.drink_type
-    ? `${order.drink_type} - `
-    : ""}
-  {order.item_name}
-</p> 
-
-  {order.start_time &&
-    ["Accepted", "Preparing", "Ready"].includes(order.status) && (
-      <p className="text-xs text-green-600 font-semibold">
-        ⏱ {formatRunningTime(order.start_time)}
-      </p>
-    )}
-</div>    <p className="text-sm text-gray-600">👤 {order.user_name}</p>
-    <p className="text-sm text-gray-500">📍 {order.seat}</p>
-    <p className="text-xs text-yellow-600 mb-2">{order.status}</p>
-
-    {order.notes && (
-      <div className="bg-white p-2 rounded text-xs mb-2 text-gray-600">
-        📝 {order.notes}
-      </div>
-    )}
-
-    {order.status === "Pending" && (
-      <div className="flex gap-2">
-        <button
-          onClick={() => updateOrderStatus(order.id, "Accepted")}
-          className="flex-1 bg-[#103c7f] text-white py-1 rounded text-sm"
-        >
-          Accept
-        </button>
-<button
-  onClick={() => {
-    setSelectedOrderId(order.id);
-    setShowReject(true);
-  }}
-  className="flex-1 bg-red-500 text-white py-1 rounded text-sm"
->
-  Reject
-</button>
-      </div>
-    )}
-
-    {order.status === "Accepted" && (
-      <button
-        onClick={() => updateOrderStatus(order.id, "Preparing")}
-        className="w-full bg-[#a1db40] py-1 rounded text-sm"
-      >
-        Start Preparing
-      </button>
-    )}
-
-    {order.status === "Preparing" && (
-      <button
-        onClick={() => updateOrderStatus(order.id, "Ready")}
-        className="w-full bg-[#a1db40] py-1 rounded text-sm"
-      >
-        Mark Ready
-      </button>
-    )}
-
-    {order.status === "Ready" && (
-      <button
-        onClick={() => updateOrderStatus(order.id, "Served")}
-        className="w-full bg-black text-white py-1 rounded text-sm"
-      >
-        Mark Served
-      </button>
-    )}
-  </div>
-))}          </div>
-
-
-  <div className="space-y-3">
-  {liveServices.map((service) => (
-    <div key={service.id} className="bg-gray-50 p-4 rounded-lg">
-      
-<div className="flex justify-between items-center mb-2">
-  <p className="font-medium text-[#103c7f]">🛠 {service.service}</p>
-
-{service.start_time && ["Processing"].includes(service.status) && (      <p className="text-xs text-green-600 font-semibold">
-        ⏱ {formatRunningTime(service.start_time)}
-      </p>
-    )}
-</div> 
-
-      <p className="text-sm text-gray-600">👤 {service.user_name}</p>
-      <p className="text-sm text-gray-500">📍 {service.seat}</p>
-      <p className="text-xs text-yellow-600 mb-2">{service.status}</p>
-
-      {service.status === "Pending" && (
-        <div className="flex gap-2">
-          <button
-            onClick={() => updateServiceStatus(service.id, "Processing")}
-            className="flex-1 bg-[#103c7f] text-white py-1 rounded text-sm"
-          >
-            Start
-          </button>
-
-          <button
-            onClick={() => {
-              setSelectedServiceId(service.id);
-              setShowServiceReject(true);
-            }}
-            className="flex-1 bg-red-500 text-white py-1 rounded text-sm"
-          >
-            Reject
-          </button>
-        </div>
-      )}
-
-      {service.status === "Processing" && (
-        <button
-          onClick={() => updateServiceStatus(service.id, "Completed")}
-          className="w-full bg-[#a1db40] py-1 rounded text-sm"
-        >
-          Mark Completed
-        </button>
-      )}
     </div>
-  ))}
-</div>
 
-        </div>
+   
 
-        {/* CENTER PANEL */}
-        <div className="bg-white rounded-xl p-6 flex flex-col">
-        <div className="flex justify-between items-center mb-6">
-  <div>
-    <h1 className="text-xl font-semibold text-[#103c7f]">
-      Staff Dashboard
-    </h1>
+    {/* Summary Cards */}
+{/* Monthly Summary Section */}
+<div className="mb-6">
+  <div className="flex items-center justify-between mb-3">
+    <h2 className="text-xl font-semibold text-[#103c7f]">
+      📊 Monthly Summary
+    </h2>
     <p className="text-sm text-gray-500">
-      Manage cafeteria orders & services
+      Overview of orders and requests this month
     </p>
   </div>
 
-  <div className="flex items-center gap-4">
-    <button
-      onClick={() => router.push("/screens/staff/orders")}
-      className="p-2 rounded-lg hover:bg-gray-100"
-      title="View Orders History"
-    >
-      <ClipboardList size={20} className="text-[#103c7f]" />
-    </button>
+  <div className="flex gap-3 w-full">
+    {/* Completed */}
+    <div className="flex-1 min-w-0 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
+      <div className="flex items-center gap-2 min-w-0">
+        <CheckCircle size={18} className="text-green-600 shrink-0" />
+        <p className="text-xs text-gray-600 truncate font-medium">Completed</p>
+      </div>
+      <p className="text-2xl font-bold text-green-600 mt-3">{completedCount}</p>
+    </div>
 
-    <button
-      onClick={() => router.push("/screens/staff/service-requests")}
-      className="p-2 rounded-lg hover:bg-gray-100"
-      title="View Services History"
-    >
-      <Wrench size={20} className="text-[#103c7f]" />
-    </button>
+    {/* Rejected */}
+    <div className="flex-1 min-w-0 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
+      <div className="flex items-center gap-2 min-w-0">
+        <XCircle size={18} className="text-red-600 shrink-0" />
+        <p className="text-xs text-gray-600 truncate font-medium">Rejected</p>
+      </div>
+      <p className="text-2xl font-bold text-red-600 mt-3">{rejectedCount}</p>
+    </div>
 
-    <button
-      onClick={() => {
-        const confirmLogout = window.confirm("Do you want to logout?");
-        if (confirmLogout) logout();
-      }}
-      className="p-2 rounded-lg hover:bg-gray-100"
-      title="Logout"
-    >
-      <LogOut size={20} className="text-[#103c7f]" />
-    </button>
+    {/* Requests */}
+    <div className="flex-1 min-w-0 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
+      <div className="flex items-center gap-2 min-w-0">
+        <Wrench size={18} className="text-blue-600 shrink-0" />
+        <p className="text-xs text-gray-600 truncate font-medium">Requests</p>
+      </div>
+      <p className="text-2xl font-bold text-blue-600 mt-3">{totalServiceCount}</p>
+    </div>
+
+    {/* Cancelled */}
+    <div className="flex-1 min-w-0 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
+      <div className="flex items-center gap-2 min-w-0">
+        <XCircle size={18} className="text-orange-500 shrink-0" />
+        <p className="text-xs text-gray-600 truncate font-medium">Cancelled</p>
+      </div>
+      <p className="text-2xl font-bold text-orange-500 mt-3">{cancelledServiceCount}</p>
+    </div>
   </div>
 </div>
-          {/* Order Summary */}
-          <div className="mb-6">
-            <h2 className="text-sm text-[#103c7f] mb-3">Order Summary Monthly</h2>
 
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              <button className="bg-gray-50 p-4 rounded-lg hover:bg-gray-100 text-left">
-                <div className="flex items-center gap-2">
-                  <CheckCircle size={18} className="text-green-600" />
-                  <p className="text-sm text-gray-600">Completed Orders</p>
-                </div>
-                <p className="text-lg font-semibold text-green-600 mt-1">
-                  {completedCount}
-                </p>
-              </button>
+    {/* Live Orders Section */}
+{/* Live Orders + Services (50% / 50%) */}
+<div className="h-[calc(100vh-230px)] flex flex-col gap-4 overflow-hidden">
+  {/* Orders - Top 50% */}
+  <div className="flex-1 bg-white rounded-xl p-4 shadow-sm overflow-hidden flex flex-col min-h-0">
+    <h2 className="text-[#103c7f] text-lg font-semibold mb-4">
+      🍽 Live Orders
+    </h2>
 
-              <button className="bg-gray-50 p-4 rounded-lg hover:bg-gray-100 text-left">
-                <div className="flex items-center gap-2">
-                  <XCircle size={18} className="text-red-600" />
-                  <p className="text-sm text-gray-600">Rejected Orders</p>
-                </div>
-                <p className="text-lg font-semibold text-red-600 mt-1">
-                  {rejectedCount}
-                </p>
-              </button>
-            </div>
+    <div className="flex-1 overflow-auto min-h-0">
+      <table className="w-full text-sm border-collapse">
+        <thead className="sticky top-0 bg-gray-100 z-10">
+          <tr className="text-left text-gray-600">
+            <th className="p-3">Image</th>
+            <th className="p-3">Item</th>
+            <th className="p-3">Qty</th>
+            <th className="p-3">User</th>
+            <th className="p-3">Seat</th>
+            <th className="p-3">Status</th>
+            <th className="p-3">Timer</th>
+            <th className="p-3">Action</th>
+          </tr>
+        </thead>
 
-            {/* Service Summary */}
-            <h2 className="text-sm text-[#103c7f] mb-3">Service Summary</h2>
+        <tbody>
+          {liveOrders.map((order) => (
+            <tr key={order.id} className="border-b hover:bg-gray-50">
+              <td className="p-3">
+                {order.item_image && (
+                  <img
+                    src={order.item_image}
+                    alt={order.item_name}
+                    className="w-12 h-12 rounded-lg object-cover"
+                  />
+                )}
+              </td>
 
-            <div className="grid grid-cols-2 gap-3">
-              <button className="bg-gray-50 p-4 rounded-lg hover:bg-gray-100 text-left">
-                <div className="flex items-center gap-2">
-                  <Wrench size={18} className="text-blue-600" />
-                  <p className="text-sm text-gray-600">Total Requests</p>
-                </div>
-                <p className="text-lg font-semibold text-blue-600 mt-1">
-                  {totalServiceCount}
-                </p>
-              </button>
+              <td className="p-3">
+                <p className="font-medium text-[#103c7f]">{order.item_name}</p>
+                {order.notes && (
+                  <p className="text-xs text-gray-400">📝 {order.notes}</p>
+                )}
+              </td>
 
-              <button className="bg-gray-50 p-4 rounded-lg hover:bg-gray-100 text-left">
-                <div className="flex items-center gap-2">
-                  <XCircle size={18} className="text-red-600" />
-                  <p className="text-sm text-gray-600">Cancelled Requests</p>
-                </div>
-                <p className="text-lg font-semibold text-red-600 mt-1">
-                  {cancelledServiceCount}
-                </p>
-              </button>
-            </div>
-          </div>
+              <td className="p-3">x{order.quantity || 1}</td>
+              <td className="p-3">{order.user_name}</td>
+              <td className="p-3">{order.seat}</td>
+              <td className="p-3">{order.status}</td>
 
-          {/* View Buttons */}
-          {/* <div className="space-y-3">
-            <button
-              onClick={() => router.push("/screens/staff/orders")}
-              className="w-full bg-[#103c7f] text-white p-3 rounded-lg flex justify-between items-center"
-            >
-              View Orders
-              <ClipboardList size={18} />
-            </button>
+              <td className="p-3 text-green-600">
+                {order.start_time &&
+                ["Accepted", "Preparing", "Ready"].includes(order.status)
+                  ? formatRunningTime(order.start_time)
+                  : "-"}
+              </td>
 
-            <button
-              onClick={() => router.push("/screens/staff/service-requests")}
-              className="w-full bg-[#a1db40] text-black p-3 rounded-lg flex justify-between items-center"
-            >
-              View Services
-              <Wrench size={18} />
-            </button>
-          </div> */}
-<div className="mt-6 border-t pt-4">
-  <button
-    onClick={() => setShowInventoryModal(true)}
-    className="w-full bg-[#103c7f] text-white py-2 rounded-lg text-sm hover:opacity-90"
-  >
-    Add Inventory Request
-  </button>
+              <td className="p-3">
+                {order.status === "Pending" && (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => updateOrderStatus(order.id, "Accepted")}
+                      className="bg-[#103c7f] text-white px-3 py-1 rounded-lg text-xs"
+                    >
+                      Accept
+                    </button>
 
-  {/* History */}
-  <div className="mt-5">
-    <h3 className="text-sm font-semibold text-[#103c7f] mb-3">
-      Request History
-    </h3>
-<div className="space-y-3 max-h-56 overflow-y-auto pr-1">
-  {inventoryRequests.map((item) => (
-    <div
-      key={item.id}
-      className="bg-white rounded-lg border border-gray-100 p-4 shadow-sm hover:shadow-md transition"
-    >
-      <div className="flex justify-between items-start mb-2">
-        <div>
-          <p className="font-semibold text-[#103c7f] text-sm">
-            {item.product_name}
-          </p>
+                    <button
+                      onClick={() => {
+                        setSelectedOrderId(order.id);
+                        setShowReject(true);
+                      }}
+                      className="bg-red-500 text-white px-3 py-1 rounded-lg text-xs"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                )}
 
-          <p className="text-xs text-gray-400 mt-1">
-            {item.quantity} {item.unit}
-          </p>
-        </div>
+                {order.status === "Accepted" && (
+                  <button
+                    onClick={() => updateOrderStatus(order.id, "Preparing")}
+                    className="bg-[#a1db40] px-3 py-1 rounded-lg text-xs"
+                  >
+                    Start
+                  </button>
+                )}
 
-        <span
-          className={`text-[11px] px-3 py-1 rounded-full font-medium ${
-            item.status === "Approved"
-              ? "bg-green-50 text-green-600"
-              : item.status === "Rejected"
-              ? "bg-red-50 text-red-500"
-              : "bg-yellow-50 text-yellow-600"
-          }`}
-        >
-          {item.status}
-        </span>
-      </div>
+                {order.status === "Preparing" && (
+                  <button
+                    onClick={() => updateOrderStatus(order.id, "Ready")}
+                    className="bg-[#a1db40] px-3 py-1 rounded-lg text-xs"
+                  >
+                    Ready
+                  </button>
+                )}
 
-      <div className="bg-gray-50 rounded-md px-3 py-2 text-xs text-gray-600">
-        {item.reason}
-      </div>
-
-      {item.admin_remark && (
-        <div className="mt-2 text-xs text-[#103c7f] bg-blue-50 px-3 py-2 rounded-md">
-          Admin: {item.admin_remark}
-        </div>
-      )}
+                {order.status === "Ready" && (
+                  <button
+                    onClick={() => updateOrderStatus(order.id, "Served")}
+                    className="bg-black text-white px-3 py-1 rounded-lg text-xs"
+                  >
+                    Served
+                  </button>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-  ))}
-</div>
   </div>
-</div>
-        </div>
 
-        
-<div className="bg-white rounded-xl p-4 overflow-y-auto h-full">
-  <h2 className="text-[#103c7f] text-lg font-semibold mb-4">
-    Product Catalog
-  </h2>
+  {/* Services - Bottom 50% */}
+  <div className="flex-1 bg-white rounded-xl p-4 shadow-sm overflow-hidden flex flex-col min-h-0">
+    <h2 className="text-[#103c7f] text-lg font-semibold mb-4">
+      🛠 Service Requests
+    </h2>
 
-<div className="flex flex-col gap-4">
-  {/** Group products by category first */}
-  {Object.entries(
-    products.reduce((acc: Record<string, typeof products>, item) => {
-      if (!acc[item.category]) acc[item.category] = [];
-      acc[item.category].push(item);
-      return acc;
-    }, {})
-  ).map(([category, items]) => (
-    <div key={category}>
-      {/* Category Header */}
-      <h2 className="text-[#103c7f] text-lg font-semibold mb-2">
-        {category}
-      </h2>
+    <div className="flex-1 overflow-auto min-h-0">
+      <table className="w-full text-sm border-collapse">
+        <thead className="sticky top-0 bg-gray-100 z-10">
+          <tr className="text-left text-gray-600">
+            <th className="p-3">Service</th>
+            <th className="p-3">User</th>
+            <th className="p-3">Seat</th>
+            <th className="p-3">Status</th>
+            <th className="p-3">Timer</th>
+            <th className="p-3">Action</th>
+          </tr>
+        </thead>
 
-      {/* Items under category */}
-      <div className="flex flex-col gap-2">
-        {items.map((product) => (
-          <div
-            key={product.id}
-            className="flex items-center justify-between bg-white rounded-md shadow-sm hover:shadow-md transition p-3 cursor-pointer"
-          >
-            {/* Left: Image */}
-            <div className="flex-shrink-0">
-              <img
-                src={product.image || "/placeholder.png"}
-                alt={product.name}
-                className="w-16 h-16 object-cover rounded-md"
-              />
-            </div>
+        <tbody>
+          {liveServices.map((service) => (
+            <tr key={service.id} className="border-b hover:bg-gray-50">
+              <td className="p-3 font-medium text-[#103c7f]">
+                🛠 {service.service}
+              </td>
 
-            {/* Middle: Name + Description */}
-            <div className="flex-1 px-3">
-              <p className="text-base font-semibold text-gray-800 truncate">
-                {product.name}
-              </p>
-              {product.description && (
-                <p className="text-sm text-gray-500 line-clamp-2">
-                  {product.description}
-                </p>
-              )}
-            </div>
+              <td className="p-3">{service.user_name}</td>
+              <td className="p-3">{service.seat}</td>
+              <td className="p-3">{service.status}</td>
 
-            {/* Right: Price */}
-            <div className="flex-shrink-0 text-right mr-6">
-              <p
-                className={`text-base font-semibold ${
-                  product.price === 0 ? "text-green-600" : "text-gray-900"
-                }`}
-              >
-                {product.price === 0 ? "Free" : `₹ ${product.price.toFixed(2)}`}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+              <td className="p-3 text-green-600">
+                {service.start_time && service.status === "Processing"
+                  ? formatRunningTime(service.start_time)
+                  : "-"}
+              </td>
+
+              <td className="p-3">
+                {service.status === "Pending" && (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() =>
+                        updateServiceStatus(service.id, "Processing")
+                      }
+                      className="bg-[#103c7f] text-white px-3 py-1 rounded-lg text-xs"
+                    >
+                      Start
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setSelectedServiceId(service.id);
+                        setShowServiceReject(true);
+                      }}
+                      className="bg-red-500 text-white px-3 py-1 rounded-lg text-xs"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                )}
+
+                {service.status === "Processing" && (
+                  <button
+                    onClick={() =>
+                      updateServiceStatus(service.id, "Completed")
+                    }
+                    className="bg-[#a1db40] px-3 py-1 rounded-lg text-xs"
+                  >
+                    Completed
+                  </button>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-  ))}
-</div></div>
+  </div>
 
-      </div>
-      {showReject && (
+</div>
+              {showReject && (
   <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
     <div className="bg-white p-5 rounded-xl w-[90%] max-w-sm shadow-lg">
       <h2 className="text-[#103c7f] font-semibold mb-3">Reject Reason</h2>
@@ -943,103 +837,7 @@ const formatRunningTime = (startTime?: string) => {
   </div>
 )}
 
-{showInventoryModal && (
-  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-    <div className="bg-white rounded-2xl w-[95%] max-w-md shadow-xl p-5">
-
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-[#103c7f] font-semibold text-lg">
-          Inventory Request
-        </h2>
-
-        <button
-          onClick={() => setShowInventoryModal(false)}
-          className="text-gray-500"
-        >
-          ✕
-        </button>
-      </div>
-
-      <div className="space-y-3">
-       <select
-          value={inventoryForm.product_name}
-          onChange={(e) =>
-            setInventoryForm({
-              ...inventoryForm,
-              product_name: e.target.value,
-            })
-          }
-          className="w-full border rounded-lg p-2 text-sm bg-white"
-        >
-          <option value="">Select Inventory Item</option>
-
-          {inventoryOptions.map((item, index) => (
-            <option key={index} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
-
-        <div className="flex gap-2">
-          <input
-            type="number"
-            placeholder="Quantity"
-            value={inventoryForm.quantity}
-            onChange={(e) =>
-              setInventoryForm({
-                ...inventoryForm,
-                quantity: e.target.value,
-              })
-            }
-            className="flex-1 border rounded-lg p-2 text-sm"
-          />
-
-          <select
-  value={inventoryForm.unit}
-  onChange={(e) =>
-    setInventoryForm({
-      ...inventoryForm,
-      unit: e.target.value,
-    })
-  }
-  className="flex-1 border rounded-lg p-2 text-sm bg-white"
->
-  <option value="">Unit</option>
-  <option value="kg">kg</option>
-  <option value="litre">litre</option>
-  <option value="packet">packet</option>
-  <option value="piece">piece</option>
-  <option value="gram">gram</option>
-</select>
-        </div>
-
-        <textarea
-          placeholder="Reason"
-          value={inventoryForm.reason}
-          onChange={(e) =>
-            setInventoryForm({
-              ...inventoryForm,
-              reason: e.target.value,
-            })
-          }
-          className="w-full border rounded-lg p-2 text-sm"
-        />
-
-        <button
-          onClick={() => {
-            submitInventoryRequest();
-            setShowInventoryModal(false);
-          }}
-          className="w-full bg-[#a1db40] py-2 rounded-lg text-sm font-medium"
-        >
-          Submit Request
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-{showServiceReject && (
+        {showServiceReject && (
   <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
     <div className="bg-white p-5 rounded-xl w-[90%] max-w-sm shadow-lg">
       <h2 className="text-[#103c7f] font-semibold mb-3">Reject Service Reason</h2>
@@ -1087,8 +885,6 @@ const formatRunningTime = (startTime?: string) => {
     </div>
   </div>
 )}
-    </div>
-
-    
-  );
+  </div>
+);
 }

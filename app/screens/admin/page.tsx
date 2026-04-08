@@ -7,6 +7,7 @@ import {
   CheckCircle,
   Users,
   User,
+  Calendar,
   UtensilsCrossed,
   ClipboardList
 } from "lucide-react";
@@ -100,7 +101,14 @@ export default function AdminDashboard() {
       icon: Users,
       path: "/screens/admin/team",
       color: "bg-[#a1db40] text-black"
-    }
+    },   
+    {
+    label: "Order Schedule",
+    icon: Calendar, // calendar icon from lucide-react
+    path: "/screens",
+      color: "bg-[#103c7f] text-white"
+  }
+
   ];
 
   return (

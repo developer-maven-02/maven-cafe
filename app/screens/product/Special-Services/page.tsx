@@ -122,7 +122,7 @@ const [seat, setSeat] = useState("");
           </button>
 
           <h1 className="font-semibold text-lg text-[#103c7f]">
-            Service Request
+            Other Request
           </h1>
         </div>
 

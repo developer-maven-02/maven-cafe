@@ -21,8 +21,7 @@ interface FavoriteOrder {
 export default function FavoritesPage() {
   const router = useRouter();
   const [favorites, setFavorites] = useState<FavoriteOrder[]>([]);
-
-  useEffect(() => {
+const [quantities, setQuantities] = useState<{ [key: string]: number | string }>({});  useEffect(() => {
     fetchFavorites();
   }, []);
 
@@ -38,11 +37,25 @@ export default function FavoritesPage() {
     }
   };
 
+ const increaseQty = (id: string) => {
+  setQuantities((prev) => ({
+    ...prev,
+    [id]: Number(prev[id] || 1) + 1,
+  }));
+};
+
+const decreaseQty = (id: string) => {
+  setQuantities((prev) => ({
+    ...prev,
+    [id]: Math.max(Number(prev[id] || 1) - 1, 1),
+  }));
+};
+
   const reorderItem = async (order: FavoriteOrder) => {
     try {
       const result = await post("/orders", {
         item_id: order.item_id,
-        quantity: order.quantity,
+        quantity: quantities[order.id] || order.quantity || 1,
         temperature: order.temperature,
         drink_type: order.drink_type,
         sugar: order.sugar,
@@ -90,52 +103,83 @@ export default function FavoritesPage() {
         )}
 
         {favorites.map((order) => (
-          <div
-            key={order.id}
-            className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100"
-          >
-            <div className="flex justify-between items-start">
+       <div
+  key={order.id}
+  className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100"
+>
+  <div className="flex justify-between items-start">
+    <div>
+      <p className="text-base font-medium text-gray-800">
+        {order.item_name}
+      </p>
 
-              <div>
-                <p className="text-base font-medium text-gray-800">
-                  {order.item_name}
-                </p>
+      <div className="flex flex-wrap gap-2 mt-2">
+        {order.temperature && (
+          <span className="text-[11px] px-2 py-1 rounded-full bg-gray-100 text-[#103c7f]">
+            {order.temperature}
+          </span>
+        )}
 
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {order.temperature && (
-                    <span className="text-[11px] px-2 py-1 rounded-full bg-gray-100 text-[#103c7f]">
-                      {order.temperature}
-                    </span>
-                  )}
+        {order.drink_type && (
+          <span className="text-[11px] px-2 py-1 rounded-full bg-gray-100 text-[#103c7f]">
+            {order.drink_type}
+          </span>
+        )}
 
-                  {order.drink_type && (
-                    <span className="text-[11px] px-2 py-1 rounded-full bg-gray-100 text-[#103c7f]">
-                      {order.drink_type}
-                    </span>
-                  )}
+        {order.sugar !== undefined && (
+          <span className="text-[11px] px-2 py-1 rounded-full bg-gray-100 text-[#103c7f]">
+            Sugar {order.sugar}
+          </span>
+        )}
+      </div>
+    </div>
 
-                  {order.sugar !== undefined && (
-                    <span className="text-[11px] px-2 py-1 rounded-full bg-gray-100 text-[#103c7f]">
-                      Sugar {order.sugar}
-                    </span>
-                  )}
-                </div>
-              </div>
+    <Heart size={18} className="fill-red-500 text-red-500" />
+  </div>
 
-              <Heart
-                size={18}
-                className="fill-red-500 text-red-500"
-              />
-            </div>
+  {/* Quantity Row */}
+<div className="flex items-center justify-between mt-4">
+  <span className="text-sm text-gray-500 font-medium">Quantity</span>
 
-            {/* Reorder */}
-            <button
-              onClick={() => reorderItem(order)}
-              className="mt-4 w-full bg-[#103c7f] text-white py-2 rounded-xl text-sm"
-            >
-              Order Again
-            </button>
-          </div>
+  <div className="flex items-center border border-gray-200 rounded-full bg-gray-50 px-2 py-1 shadow-sm">
+    <button
+      onClick={() => decreaseQty(order.id)}
+      className="w-7 h-7 flex items-center justify-center rounded-full text-[#103c7f] text-base font-semibold hover:bg-white"
+    >
+      −
+    </button>
+
+    <input
+      type="number"
+      min="1"
+      value={quantities[order.id] ?? order.quantity ?? ""}
+      onChange={(e) => {
+        const value = e.target.value;
+        setQuantities((prev) => ({
+          ...prev,
+          [order.id]: value,
+        }));
+      }}
+      className="w-10 bg-transparent text-center text-sm font-medium outline-none appearance-none"
+    />
+
+    <button
+      onClick={() => increaseQty(order.id)}
+      className="w-7 h-7 flex items-center justify-center rounded-full text-[#103c7f] text-base font-semibold hover:bg-white"
+    >
+      +
+    </button>
+  </div>
+</div>
+
+  {/* Order Button */}
+  <button
+    onClick={() => reorderItem(order)}
+    className="mt-4 w-full bg-[#103c7f] text-white py-2 rounded-xl text-sm font-medium"
+  >
+    Order Again
+  </button>
+</div>
         ))}
       </div>
     </div>
