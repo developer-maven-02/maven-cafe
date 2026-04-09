@@ -531,117 +531,116 @@ const formatRunningTime = (startTime?: string) => {
   <div className="h-screen overflow-hidden bg-gray-50 flex flex-col p-4">
 
     {/* Header */}
-    <div className="bg-white rounded-xl p-4 mb-4 shadow-sm flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <div className="w-24 h-10 relative">
-          <Image
-            src="/logo.png"
-            alt="Maven Cafe Logo"
-            fill
-            className="object-contain"
-          />
-        </div>
-
-        <div>
-          <h1 className="text-xl font-semibold text-[#103c7f]">
-            Staff Dashboard
-          </h1>
-          <p className="text-sm text-gray-500">
-            Manage live orders and requests
-          </p>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => router.push("/screens/staff/orders")}
-          className="p-2 rounded-lg hover:bg-gray-100"
-        >
-          <ClipboardList size={20} className="text-[#103c7f]" />
-        </button>
-
-        <button
-          onClick={() => router.push("/screens/staff/service-requests")}
-          className="p-2 rounded-lg hover:bg-gray-100"
-        >
-          <Wrench size={20} className="text-[#103c7f]" />
-        </button>
-         <button
-    onClick={() => router.push("/screens/staff/inventory")}
-    className="p-2 rounded-lg hover:bg-gray-100"
-  >
-    <Package size={20} className="text-[#103c7f]" />
-  </button> 
-        <button
-          onClick={logout}
-          className="p-2 rounded-lg hover:bg-gray-100"
-        >
-          <LogOut size={20} className="text-red-500" />
-        </button>
-      </div>
+    <div className="bg-white rounded-xl px-4 py-2 mb-3 shadow-sm flex items-center justify-between">
+  <div className="flex items-center gap-3">
+    <div className="w-20 h-8 relative">
+      <Image
+        src="/logo.png"
+        alt="Maven Cafe Logo"
+        fill
+        className="object-contain"
+      />
     </div>
+
+    <div>
+      <h1 className="text-lg font-semibold text-[#103c7f] leading-tight">
+        Staff Dashboard
+      </h1>
+      <p className="text-xs text-gray-500 leading-tight">
+        Live orders & requests
+      </p>
+    </div>
+  </div>
+
+  <div className="flex items-center gap-2">
+    <button
+      onClick={() => router.push("/screens/staff/orders")}
+      className="p-1.5 rounded-lg hover:bg-gray-100"
+    >
+      <ClipboardList size={18} className="text-[#103c7f]" />
+    </button>
+
+    <button
+      onClick={() => router.push("/screens/staff/service-requests")}
+      className="p-1.5 rounded-lg hover:bg-gray-100"
+    >
+      <Wrench size={18} className="text-[#103c7f]" />
+    </button>
+
+    <button
+      onClick={() => router.push("/screens/staff/inventory")}
+      className="p-1.5 rounded-lg hover:bg-gray-100"
+    >
+      <Package size={18} className="text-[#103c7f]" />
+    </button>
+
+    <button
+      onClick={logout}
+      className="p-1.5 rounded-lg hover:bg-gray-100"
+    >
+      <LogOut size={18} className="text-red-500" />
+    </button>
+  </div>
+</div>
 
    
 
     {/* Summary Cards */}
 {/* Monthly Summary Section */}
-<div className="mb-6">
-  <div className="flex items-center justify-between mb-3">
-    <h2 className="text-xl font-semibold text-[#103c7f]">
+<div className="mb-3">
+  <div className="flex items-center justify-between mb-2">
+    <h2 className="text-lg font-semibold text-[#103c7f]">
       📊 Monthly Summary
     </h2>
-    <p className="text-sm text-gray-500">
-      Overview of orders and requests this month
+    <p className="text-xs text-gray-500">
+      Overview this month
     </p>
   </div>
 
-  <div className="flex gap-3 w-full">
+  <div className="grid grid-cols-4 gap-3">
     {/* Completed */}
-    <div className="flex-1 min-w-0 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
-      <div className="flex items-center gap-2 min-w-0">
-        <CheckCircle size={18} className="text-green-600 shrink-0" />
-        <p className="text-xs text-gray-600 truncate font-medium">Completed</p>
+    <div className="bg-white rounded-xl px-4 py-3 shadow-sm">
+      <div className="flex items-center gap-2">
+        <CheckCircle size={16} className="text-green-600" />
+        <p className="text-xs text-gray-600 font-medium">Completed</p>
       </div>
-      <p className="text-2xl font-bold text-green-600 mt-3">{completedCount}</p>
+      <p className="text-xl font-bold text-green-600 mt-1">{completedCount}</p>
     </div>
 
     {/* Rejected */}
-    <div className="flex-1 min-w-0 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
-      <div className="flex items-center gap-2 min-w-0">
-        <XCircle size={18} className="text-red-600 shrink-0" />
-        <p className="text-xs text-gray-600 truncate font-medium">Rejected</p>
+    <div className="bg-white rounded-xl px-4 py-3 shadow-sm">
+      <div className="flex items-center gap-2">
+        <XCircle size={16} className="text-red-600" />
+        <p className="text-xs text-gray-600 font-medium">Rejected</p>
       </div>
-      <p className="text-2xl font-bold text-red-600 mt-3">{rejectedCount}</p>
+      <p className="text-xl font-bold text-red-600 mt-1">{rejectedCount}</p>
     </div>
 
     {/* Requests */}
-    <div className="flex-1 min-w-0 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
-      <div className="flex items-center gap-2 min-w-0">
-        <Wrench size={18} className="text-blue-600 shrink-0" />
-        <p className="text-xs text-gray-600 truncate font-medium">Requests</p>
+    <div className="bg-white rounded-xl px-4 py-3 shadow-sm">
+      <div className="flex items-center gap-2">
+        <Wrench size={16} className="text-blue-600" />
+        <p className="text-xs text-gray-600 font-medium">Requests</p>
       </div>
-      <p className="text-2xl font-bold text-blue-600 mt-3">{totalServiceCount}</p>
+      <p className="text-xl font-bold text-blue-600 mt-1">{totalServiceCount}</p>
     </div>
 
     {/* Cancelled */}
-    <div className="flex-1 min-w-0 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition">
-      <div className="flex items-center gap-2 min-w-0">
-        <XCircle size={18} className="text-orange-500 shrink-0" />
-        <p className="text-xs text-gray-600 truncate font-medium">Cancelled</p>
+    <div className="bg-white rounded-xl px-4 py-3 shadow-sm">
+      <div className="flex items-center gap-2">
+        <XCircle size={16} className="text-orange-500" />
+        <p className="text-xs text-gray-600 font-medium">Cancelled</p>
       </div>
-      <p className="text-2xl font-bold text-orange-500 mt-3">{cancelledServiceCount}</p>
+      <p className="text-xl font-bold text-orange-500 mt-1">{cancelledServiceCount}</p>
     </div>
   </div>
 </div>
 
     {/* Live Orders Section */}
 {/* Live Orders + Services (50% / 50%) */}
-<div className="h-[calc(100vh-230px)] flex flex-col gap-4 overflow-hidden">
-  {/* Orders - Top 50% */}
+<div className="grid grid-rows-2 gap-4 flex-1 min-h-0 overflow-hidden">  {/* Orders - Top 50% */}
   <div className="flex-1 bg-white rounded-xl p-4 shadow-sm overflow-hidden flex flex-col min-h-0">
-    <h2 className="text-[#103c7f] text-lg font-semibold mb-4">
-      🍽 Live Orders
-    </h2>
+    
 
     <div className="flex-1 overflow-auto min-h-0">
       <table className="w-full text-sm border-collapse">
@@ -748,9 +747,7 @@ const formatRunningTime = (startTime?: string) => {
 
   {/* Services - Bottom 50% */}
   <div className="flex-1 bg-white rounded-xl p-4 shadow-sm overflow-hidden flex flex-col min-h-0">
-    <h2 className="text-[#103c7f] text-lg font-semibold mb-4">
-      🛠 Service Requests
-    </h2>
+   
 
     <div className="flex-1 overflow-auto min-h-0">
       <table className="w-full text-sm border-collapse">
