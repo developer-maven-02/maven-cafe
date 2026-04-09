@@ -639,7 +639,7 @@ const formatRunningTime = (startTime?: string) => {
     {/* Live Orders Section */}
 {/* Live Orders + Services (50% / 50%) */}
 <div className="grid grid-rows-2 gap-4 flex-1 min-h-0 overflow-hidden">  {/* Orders - Top 50% */}
-  <div className="flex-1 bg-white rounded-xl p-4 shadow-sm overflow-hidden flex flex-col min-h-0">
+  <div className="flex-1 bg-white rounded-xl p-2 shadow-sm overflow-hidden flex flex-col min-h-0">
     
 
     <div className="flex-1 overflow-auto min-h-0">
@@ -746,7 +746,7 @@ const formatRunningTime = (startTime?: string) => {
   </div>
 
   {/* Services - Bottom 50% */}
-  <div className="flex-1 bg-white rounded-xl p-4 shadow-sm overflow-hidden flex flex-col min-h-0">
+  <div className="flex-1 bg-white rounded-xl p-2 shadow-sm overflow-hidden flex flex-col min-h-0">
    
 
     <div className="flex-1 overflow-auto min-h-0">
