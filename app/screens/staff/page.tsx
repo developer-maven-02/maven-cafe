@@ -415,10 +415,19 @@ const updateOrderStatus = async (
 
     const result = await patch(`/cafe_api/orders/${id}`, payload);
 
-    if (result.success) {
-      console.log("✅ Order status updated:", result);
-      fetchDashboard();
-    }
+   if (result.success) {
+  if (newStatus === "Served") {
+    setLiveOrders((prev) => prev.filter((o) => o.id !== id));
+  } else {
+    setLiveOrders((prev) =>
+      prev.map((o) =>
+        o.id === id ? { ...o, status: newStatus, ...payload } : o
+      )
+    );
+  }
+
+  fetchDashboard();
+}
   } catch (error) {
     console.log(error);
   }
@@ -658,8 +667,9 @@ const formatRunningTime = (startTime?: string) => {
         </thead>
 
         <tbody>
-          {liveOrders.map((order) => (
-            <tr key={order.id} className="border-b hover:bg-gray-50">
+{liveOrders
+  .filter((order) => order.status !== "Served" && order.status !== "Rejected")
+  .map((order) => (            <tr key={order.id} className="border-b hover:bg-gray-50">
               <td className="p-3">
                 {order.item_image && (
                   <img
@@ -763,8 +773,14 @@ const formatRunningTime = (startTime?: string) => {
         </thead>
 
         <tbody>
-          {liveServices.map((service) => (
-            <tr key={service.id} className="border-b hover:bg-gray-50">
+{liveServices
+  .filter(
+    (service) =>
+      service.status !== "Completed" &&
+      service.status !== "Rejected" &&
+      service.status !== "Cancelled"
+  )
+  .map((service) => (            <tr key={service.id} className="border-b hover:bg-gray-50">
               <td className="p-3 font-medium text-[#103c7f]">
                 🛠 {service.service}
               </td>
