@@ -17,8 +17,9 @@ export const metadata: Metadata = {
   description: "Cafe ordering app",
   icons: {
     icon: "/favicon.png",
+    apple: "/apple-icon.png",
   },
-
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
