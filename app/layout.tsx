@@ -17,7 +17,8 @@ export const metadata: Metadata = {
   description: "Cafe ordering app",
   icons: {
     icon: "/favicon.png",
-    apple: "/apple-icon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
   },
   manifest: "/manifest.json",
 };
