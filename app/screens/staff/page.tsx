@@ -416,7 +416,7 @@ const updateOrderStatus = async (
     const result = await patch(`/cafe_api/orders/${id}`, payload);
 
    if (result.success) {
-  if (newStatus === "Served") {
+  if (newStatus === "Served"|| newStatus === "Rejected") {
     setLiveOrders((prev) => prev.filter((o) => o.id !== id));
   } else {
     setLiveOrders((prev) =>
@@ -433,7 +433,7 @@ const updateOrderStatus = async (
   }
 };
 
- const handleReject = async () => {
+const handleReject = async () => {
   const finalReason = reason === "Other" ? customReason : reason;
 
   if (!finalReason || !selectedOrderId) {
@@ -441,22 +441,12 @@ const updateOrderStatus = async (
     return;
   }
 
-  try {
-    const result = await patch(`/cafe_api/orders/${selectedOrderId}`, {
-      status: "Rejected",
-      reject_reason: finalReason,
-    });
+  await updateOrderStatus(selectedOrderId, "Rejected", finalReason);
 
-    if (result.success) {
-      fetchDashboard();
-      setShowReject(false);
-      setReason("");
-      setCustomReason("");
-      setSelectedOrderId(null);
-    }
-  } catch (error) {
-    console.log(error);
-  }
+  setShowReject(false);
+  setReason("");
+  setCustomReason("");
+  setSelectedOrderId(null);
 };
 
 const updateServiceStatus = async (
@@ -483,6 +473,16 @@ const updateServiceStatus = async (
     const result = await patch(`/cafe_api/service-requests/${id}`, payload);
 
     if (result.success) {
+      if (newStatus === "Completed" || newStatus === "Rejected") {
+        setLiveServices((prev) => prev.filter((s) => s.id !== id));
+      } else {
+        setLiveServices((prev) =>
+          prev.map((s) =>
+            s.id === id ? { ...s, status: newStatus, ...payload } : s
+          )
+        );
+      }
+
       fetchDashboard();
     }
   } catch (error) {
@@ -497,22 +497,12 @@ const handleServiceReject = async () => {
     return;
   }
 
-  try {
-    const result = await patch(`/cafe_api/service-requests/${selectedServiceId}`, {
-      status: "Rejected",
-      rejected_reason: finalReason,
-    });
+  await updateServiceStatus(selectedServiceId, "Rejected", finalReason);
 
-    if (result.success) {
-      fetchDashboard();
-      setShowServiceReject(false);
-      setReason("");
-      setCustomReason("");
-      setSelectedServiceId(null);
-    }
-  } catch (error) {
-    console.log(error);
-  }
+  setShowServiceReject(false);
+  setReason("");
+  setCustomReason("");
+  setSelectedServiceId(null);
 };
 
 const formatRunningTime = (startTime?: string) => {
