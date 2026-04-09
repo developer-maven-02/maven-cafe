@@ -16,10 +16,10 @@ export const metadata: Metadata = {
   title: "Maven Cafe",
   description: "Cafe ordering app",
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
-  },
+  icon: "/favicon.png",
+  shortcut: "/icon-192.png",
+  apple: "/icon-192.png",
+},
   manifest: "/manifest.json",
 };
 
