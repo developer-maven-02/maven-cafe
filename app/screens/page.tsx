@@ -55,13 +55,32 @@ export default function MenuPage() {
   const [combos, setCombos] = useState([]);
   const [services, setServices] = useState([]);
   const [userRole, setUserRole] = useState("");
+const [profileImage, setProfileImage] = useState("https://i.pravatar.cc/150?img=12");
+const [orderCount, setOrderCount] = useState(0);
+const fetchOrderCount = async () => {
+  try {
+    const result = await get("/orders/my");
 
+    if (result.success) {
+      const activeOrders = result.orders.filter(
+        (o: any) =>
+          o.status !== "Served" && o.status !== "Rejected"
+      );
+
+      setOrderCount(activeOrders.length);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
   const fetchUserRole = async () => {
   try {
     const result = await get("/profile");
 
     if (result.success) {
       setUserRole(result.user.role);
+      setProfileImage(result.user.profile_image); // 👈 add this
+
     }
   } catch (error) {
     console.error(error);
@@ -72,6 +91,7 @@ export default function MenuPage() {
     fetchMenu();
       fetchCombos();
        fetchServices();
+       fetchOrderCount();
    fetchUserRole();
   }, []);
 
@@ -86,6 +106,8 @@ export default function MenuPage() {
     console.error(error);
   }
 };
+
+
   const fetchCombos = async () => {
   try {
     const result = await get("/combo");
@@ -187,9 +209,11 @@ const filteredItems = items.filter((item: any) => {
 
     {/* Right Side */}
     <div className="flex items-center gap-4 text-white">
-      {/* <Link href="/screens/combo">
+       {userRole === "admin" && (
+   <Link href="/screens/combo">
         <Gift size={22} />
-      </Link> */}
+      </Link>
+       )}
 
       <Link href="/screens/favorite">
         <Heart size={22} />
@@ -197,14 +221,22 @@ const filteredItems = items.filter((item: any) => {
 
       <Link href="/screens/orders/MyOrders" className="relative">
         <ShoppingBag size={22} />
-        <span className="absolute -top-1 -right-2 bg-[#a1db40] text-[10px] px-1 rounded-full text-[#103c7f] font-semibold">
-          2
-        </span>
+       {orderCount > 0 && (
+  <span className="absolute -top-1 -right-2 bg-[#a1db40] text-[10px] px-1 rounded-full text-[#103c7f] font-semibold">
+    {orderCount}
+  </span>
+)}
       </Link>
 
       <Link href="/screens/profile">
-        <User size={22} />
-      </Link>
+ 
+    <img
+      src={profileImage || "https://i.pravatar.cc/150?img=12"}
+      alt="profile"
+      className="w-8 h-8 rounded-full object-cover border-2 border-white"
+    />
+
+</Link>
     </div>
 
   </div>
