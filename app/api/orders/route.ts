@@ -30,6 +30,7 @@ export async function POST(req: Request) {
       sugar,
       food_type,
       notes,
+      name,
     } = await req.json();
 
 
@@ -64,7 +65,7 @@ export async function POST(req: Request) {
       .insert([
         {
           user_id: userId,
-          user_name: user.name,
+         user_name: name || user.name,
           item_id: item.id,
           item_name: item.name,
           item_image: item.image,

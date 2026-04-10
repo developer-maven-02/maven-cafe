@@ -1,116 +1,198 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowLeft, Package } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { get } from "@/lib/api";
+import { get, post } from "@/lib/api";
+import { ArrowLeft } from "lucide-react";
 
-export default function ComboDetailPage() {
-  const router = useRouter();
+export default function CustomComboPage() {
   const params = useParams();
+  const router = useRouter();
 
-  const [combo, setCombo] = useState<any>(null);
+  const [items, setItems] = useState<any[]>([]);
+  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+  const [selectedVIP, setSelectedVIP] = useState("VIP1");
+  const [seat, setSeat] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchCombo();
-  }, []);
+    if (params?.id) {
+      fetchItems();
+    }
+  }, [params.id]);
 
-  const fetchCombo = async () => {
+  const fetchItems = async () => {
     try {
-      const result = await get(`/combo/${params.id}`);
-       console.log("cheheh",result);
+      const raw = params.id?.toString() || "";
+      const decoded = decodeURIComponent(raw);
+      const ids = decoded.split(",");
+
+      const result = await get("/menu/items");
+
       if (result.success) {
-        setCombo(result.combo);
+        const selected = result.items.filter((item: any) =>
+          ids.includes(item.id.toString())
+        );
+
+        setItems(selected);
+
+        const qtyObj: any = {};
+        selected.forEach((item: any) => {
+          qtyObj[item.id] = 1;
+        });
+        setQuantities(qtyObj);
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.log(err);
     } finally {
       setLoading(false);
     }
   };
 
+  const increaseQty = (id: string) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: (prev[id] || 1) + 1,
+    }));
+  };
+
+  const decreaseQty = (id: string) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: prev[id] > 1 ? prev[id] - 1 : 1,
+    }));
+  };
+
+  const placeOrder = async () => {
+    try {
+      if (!seat) {
+        alert("Please enter seat / location");
+        return;
+      }
+
+      for (let item of items) {
+        await post("/orders", {
+          item_id: item.id,
+          quantity: quantities[item.id] || 1,
+          name: selectedVIP, // VIP
+          seat: seat, // Seat
+        });
+      }
+
+      alert("Order placed successfully 🎉");
+      router.push("/screens/orders/MyOrders");
+    } catch (error) {
+      console.log(error);
+      alert("Order failed");
+    }
+  };
+
   if (loading) {
     return (
-      <div className="p-6 text-center text-gray-500">
-        Loading...
+      <div className="p-4 text-center text-gray-500">
+        Loading your combo...
       </div>
     );
   }
 
   return (
-    <div className="max-w-[420px] mx-auto min-h-screen bg-[#f7f9fc] pb-28">
+    <div className="max-w-[420px] mx-auto min-h-screen bg-[#f7f9fc] pb-24">
 
-      {/* Header */}
-      <div className="bg-[#103c7f] px-4 pt-7 pb-6 rounded-b-3xl text-white shadow-lg">
-        <div className="flex items-center gap-3">
-          <button onClick={() => router.back()}>
-            <ArrowLeft size={22} />
-          </button>
-
-          <h2 className="text-lg font-bold">
-            Combo Details 🍽️
-          </h2>
-        </div>
+      {/* 🔷 Header */}
+      <div className="sticky top-0 bg-[#103c7f] text-white p-4 flex items-center gap-3 shadow-md">
+        <button onClick={() => router.back()}>
+          <ArrowLeft size={20} />
+        </button>
+        <h1 className="font-semibold text-lg">Your Combo</h1>
       </div>
 
-      {/* Combo Card */}
-      <div className="px-4 mt-5">
-        <div className="bg-white rounded-3xl shadow-md border border-gray-100 p-4">
+      {/* ✅ VIP Select */}
+      <div className="p-4">
+        <label className="text-sm text-gray-600 mb-1 block">
+          Select VIP
+        </label>
+        <select
+          value={selectedVIP}
+          onChange={(e) => setSelectedVIP(e.target.value)}
+          className="w-full p-2 rounded-lg border bg-white text-sm"
+        >
+          <option value="VIP1">VIP1</option>
+          <option value="VIP2">VIP2</option>
+          <option value="VIP3">VIP3</option>
+        </select>
+      </div>
 
-          <div className="flex items-center gap-3">
-            <div className="bg-[#103c7f]/10 p-3 rounded-2xl">
-              <Package size={24} className="text-[#103c7f]" />
-            </div>
+      {/* ✅ Seat Input */}
+      <div className="px-4 pb-2">
+        <label className="text-sm text-gray-600 mb-1 block">
+          Enter Seat / Location
+        </label>
+        <input
+          type="text"
+          value={seat}
+          onChange={(e) => setSeat(e.target.value)}
+          placeholder="e.g. Table 5"
+          className="w-full p-2 rounded-lg border bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#103c7f]"
+        />
+      </div>
 
-            <div>
-              <h3 className="font-semibold text-gray-800">
-                {combo.name}
-              </h3>
+      {/* 🔥 Items */}
+      <div className="p-4 space-y-3">
+        {items.map((item) => (
+          <div
+            key={item.id}
+            className="flex gap-3 bg-white p-3 rounded-2xl shadow-sm border border-gray-100"
+          >
+            <img
+              src={item.image || "/placeholder.png"}
+              className="w-16 h-16 rounded-xl object-cover"
+            />
 
-              <p className="text-xs text-[#a1db40] font-medium">
-                Combo Deal
+            <div className="flex-1">
+              <p className="font-semibold text-gray-800 text-sm">
+                {item.name}
               </p>
+
+              <p className="text-xs text-gray-500 line-clamp-1">
+                {item.description}
+              </p>
+
+              <p className="text-xs text-green-600 mt-1 font-medium">
+                Included in combo
+              </p>
+
+              <div className="flex items-center gap-2 mt-2">
+                <button
+                  onClick={() => decreaseQty(item.id)}
+                  className="w-7 h-7 rounded-lg bg-gray-200 text-sm"
+                >
+                  -
+                </button>
+
+                <span className="text-sm font-medium">
+                  {quantities[item.id] || 1}
+                </span>
+
+                <button
+                  onClick={() => increaseQty(item.id)}
+                  className="w-7 h-7 rounded-lg bg-[#103c7f] text-white text-sm"
+                >
+                  +
+                </button>
+              </div>
             </div>
           </div>
+        ))}
+      </div>
 
-          {/* Items */}
-          <div className="mt-5 space-y-3">
-            {combo.items?.map((item: any) => (
-              <div
-                key={item.id}
-                className="flex items-center gap-3 border rounded-2xl p-3"
-              >
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-14 h-14 rounded-xl object-cover"
-                />
-
-                <div className="flex-1">
-                  <h4 className="text-sm font-medium text-gray-800">
-                    {item.name}
-                  </h4>
-
-                  <p className="text-xs text-gray-500">
-                    ₹{item.price}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Total */}
-          <div className="flex justify-between items-center mt-5">
-            <p className="font-bold text-[#103c7f]">
-              Total ₹{combo.total_price}
-            </p>
-
-            <button className="bg-[#103c7f] text-white px-4 py-2 rounded-xl text-sm">
-              Order Combo
-            </button>
-          </div>
-        </div>
+      {/* ✅ Bottom Button */}
+      <div className="fixed bottom-0 left-0 right-0 max-w-[420px] mx-auto bg-white border-t p-4 shadow-lg">
+        <button
+          onClick={placeOrder}
+          className="w-full bg-[#103c7f] text-white py-3 rounded-xl font-semibold shadow-md"
+        >
+          Place VIP Order 🚀
+        </button>
       </div>
     </div>
   );

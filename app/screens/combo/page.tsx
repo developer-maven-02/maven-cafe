@@ -116,11 +116,12 @@ export default function ComboPage() {
           </div>
 
           <button
-            onClick={() => {
-              if (comboItems.length >= 2) {
-                setShowNameStep(true);
-              }
-            }}
+        onClick={() => {
+  if (comboItems.length >= 2) {
+    const ids = comboItems.map((i) => i.id).join(",");
+    router.push(`/screens/combo/${ids}`);
+  }
+}}
             disabled={comboItems.length < 2}
             className={`px-4 py-1.5 rounded-xl text-sm font-medium ${
               comboItems.length >= 2
@@ -188,10 +189,7 @@ export default function ComboPage() {
                     </p>
 
                     <div className="mt-3 flex justify-between items-center">
-                      <p className="font-bold text-[#103c7f]">
-                        ₹{item.price}
-                      </p>
-
+                     
                       <button
                         onClick={() => toggleComboItem(item)}
                         className={`px-3 py-1 rounded-xl text-xs font-medium ${
