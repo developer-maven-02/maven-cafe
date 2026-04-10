@@ -83,9 +83,7 @@ export default function LoginPage() {
             <div className="space-y-1.5">
               <div className="flex justify-between items-center px-1">
                 <label className="text-[13px] font-semibold text-gray-600">Password</label>
-                <button type="button" className="text-xs font-bold text-[#103c7f] hover:opacity-80">
-                  Forgot?
-                </button>
+                
               </div>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">

@@ -15,6 +15,7 @@ export default function ItemDetails() {
 
   const [temperature, setTemperature] = useState("Hot");
   const [type, setType] = useState("Milk");
+  const [ordering, setOrdering] = useState(false);
   const [sugar, setSugar] = useState(0);
   const [qty, setQty] = useState(1);
   const [notes, setNotes] = useState("");
@@ -25,6 +26,8 @@ export default function ItemDetails() {
 
   const fetchItem = async () => {
     try {
+          
+
       const result = await get(`/menu/items/${params.id}`);
 
       if (result.success) {
@@ -39,12 +42,14 @@ export default function ItemDetails() {
     } catch (error) {
       console.error(error);
     } finally {
+setOrdering(false);
       setLoading(false);
     }
   };
 
   const placeOrder = async () => {
   try {
+    setOrdering(true);
     const body = {
       item_id: item.id,
       quantity: qty,
@@ -228,11 +233,17 @@ export default function ItemDetails() {
 
       <div className="fixed bottom-0 left-0 right-0 flex justify-center">
         <div className="max-w-[420px] w-full p-4 bg-white shadow-[0_-4px_15px_rgba(0,0,0,0.12)] rounded-t-2xl">
-          <button 
-            onClick={placeOrder}
-          className="w-full bg-[#a1db40] text-black py-3 rounded-xl font-semibold">
-            Place Order
-          </button>
+         <button
+  onClick={placeOrder}
+  disabled={ordering}
+  className={`w-full py-3 rounded-xl font-semibold ${
+    ordering
+      ? "bg-gray-400 text-white cursor-not-allowed"
+      : "bg-[#a1db40] text-black"
+  }`}
+>
+  {ordering ? "Placing Order..." : "Place Order"}
+</button>
         </div>
       </div>
     </div>

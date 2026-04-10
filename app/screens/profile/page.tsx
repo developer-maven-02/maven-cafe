@@ -13,7 +13,7 @@ export default function Profile() {
   const [email, setEmail] = useState("");
   const [seat, setSeat] = useState("");
   const [photo, setPhoto] = useState("https://i.pravatar.cc/150?img=12");
-
+ const [selectedFile, setSelectedFile] = useState<any>(null);
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -33,32 +33,55 @@ export default function Profile() {
     }
   };
 
-  const updateProfile = async () => {
-    try {
-      const result = await put("/profile", {
-        name,
-        seat,
-      });
+  
+const updateProfile = async () => {
+  try {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("seat", seat);
 
-      if (result.success) {
-        alert("Profile updated successfully");
-      }
-    } catch (error) {
-      console.log(error);
+    if (selectedFile) {
+      formData.append("profile_image", selectedFile);
     }
-  };
+
+    const result = await put("/profile", formData, true); // ✅ FIXED
+
+    if (result.success) {
+      alert("Profile updated successfully");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   const logout = async () => {
     await post("/auth/logout", {});
     router.push("/");
   };
 
-  const handlePhotoChange = (e: any) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPhoto(URL.createObjectURL(file));
-    }
-  };
+const handlePhotoChange = (e: any) => {
+  const file = e.target.files[0];
+
+  if (!file) return;
+
+  // ✅ size check
+  if (file.size > 2 * 1024 * 1024) {
+    alert("Image must be less than 2MB");
+    return;
+  }
+
+  // ✅ type check
+  if (!file.type.startsWith("image/")) {
+    alert("Please upload a valid image");
+    return;
+  }
+
+  // ✅ SAVE FILE (IMPORTANT)
+  setSelectedFile(file);
+
+  // ✅ Preview
+  setPhoto(URL.createObjectURL(file));
+};
 
   return (
     <div className="max-w-[420px] mx-auto min-h-screen bg-gray-50 pb-10">
@@ -99,7 +122,7 @@ export default function Profile() {
             alt="Profile"
             className="w-24 h-24 rounded-full mx-auto object-cover"
           />
-{/* 
+
           <label className="block mt-3 text-sm text-[#103c7f] cursor-pointer">
             Change Photo
             <input
@@ -107,7 +130,7 @@ export default function Profile() {
               className="hidden"
               onChange={handlePhotoChange}
             />
-          </label> */}
+          </label>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm p-5 space-y-4">

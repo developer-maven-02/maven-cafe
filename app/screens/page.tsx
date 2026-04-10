@@ -39,6 +39,7 @@ const categories = [
   { name: "Beverage", icon: "☕" },
   { name: "Food", icon: "🍔" },
   { name: "Combo", icon: "🥪" },
+  { name: "Special Item", icon: "🔥" },   // added special item
   { name: "Other Services", icon: "⭐" },
 ];
 
@@ -112,11 +113,32 @@ export default function MenuPage() {
     }
   };
 
- const filteredItems = items.filter((item: any) => {
-    const matchesCategory = activeCategory === "All" || item.category === activeCategory;
-    const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+//  const filteredItems = items.filter((item: any) => {
+//     const matchesCategory = activeCategory === "All" || item.category === activeCategory;
+//     const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase());
+//     return matchesCategory && matchesSearch;
+//   });
+const filteredItems = items.filter((item: any) => {
+  const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase());
+
+  let matchesCategory = false;
+
+  if (activeCategory === "All") {
+    // ❌ Exclude priced items
+    matchesCategory = Number(item.price) === 0;
+  } 
+  else if (activeCategory === "Special Item") {
+    // ✅ Only priced items
+    matchesCategory = Number(item.price) > 0;
+  } 
+  else {
+    // ❌ Normal categories but exclude priced items
+    matchesCategory =
+      item.category === activeCategory && Number(item.price) === 0;
+  }
+
+  return matchesCategory && matchesSearch;
+});
 
   const serviceIconMap = {
   Bell,
