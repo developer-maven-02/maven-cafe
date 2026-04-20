@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Plus, Pencil, Trash2 } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Search, X } from "lucide-react";
 
 import { get, remove ,patch} from "@/lib/api";
 export default function FoodManagement() {
@@ -10,6 +10,11 @@ export default function FoodManagement() {
 
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredItems = items.filter((item) =>
+    item.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // ✅ Fetch food items
   useEffect(() => {
@@ -102,6 +107,28 @@ const toggleAvailability = async (item: any) => {
 
       </div>
 
+      {/* Search Bar */}
+      <div className="px-4 pb-2">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+          <input
+            type="text"
+            placeholder="Search items..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-10 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#103c7f]"
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* Food List */}
       <div className="p-4 space-y-3">
 
@@ -109,12 +136,12 @@ const toggleAvailability = async (item: any) => {
           <p className="text-center text-sm text-gray-500">
             Loading...
           </p>
-        ) : items.length === 0 ? (
+        ) : filteredItems.length === 0 ? (
           <p className="text-center text-sm text-gray-500">
-            No food items found
+            {searchTerm ? "No items found" : "No food items found"}
           </p>
         ) : (
-          items.map((item) => (
+          filteredItems.map((item) => (
            <div
   key={item.id}
   className="bg-white rounded-xl p-4 shadow-sm flex justify-between items-center"
