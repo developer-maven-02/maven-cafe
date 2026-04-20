@@ -19,6 +19,7 @@ const { id } = useParams();
   const [loading, setLoading] = useState(false);
    const [category, setCategory] = useState("Food");
   const [price, setPrice] = useState("");
+  const [isAvailable, setIsAvailable] = useState(true);
   // ✅ Edit mode fetch
   useEffect(() => {
     if (id) {
@@ -36,6 +37,7 @@ const { id } = useParams();
         setImage(item.image || null); // API image
         setCategory(item.category || "Food");
         setPrice(item.price || "");
+        setIsAvailable(item.is_available ?? true);
       }
     } catch (error) {
       console.log(error);
@@ -76,7 +78,7 @@ const { id } = useParams();
   return;
 }
       if (file) formData.append("image", file);
-      formData.append("is_available", "true");
+      formData.append("is_available", isAvailable.toString());
 
       let result;
       if (id) {
@@ -173,7 +175,7 @@ const { id } = useParams();
             <p className="text-sm text-gray-500 mb-2">Upload Image</p>
             <label className="flex items-center justify-center gap-2 bg-gray-100 p-4 rounded-lg cursor-pointer">
               <Upload size={18}   className="text-[#103c7f]"/>
-              <span className="text-sm text-gray-600">Choose Image</span>
+              <span className="text-sm gray-600">Choose Image</span>
               <input
                 type="file"
                 onChange={handleImage}
@@ -188,6 +190,26 @@ const { id } = useParams();
                 className="mt-3 w-full h-40 object-cover rounded-lg"
               />
             )}
+          </div>
+
+          <div className="flex items-center justify-between p-4 bg-gray-100 rounded-lg">
+            <div>
+              <p className="text-sm text-gray-700 font-medium">Available</p>
+              <p className="text-xs text-gray-500">Item will be shown in menu</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsAvailable(!isAvailable)}
+              className={`relative w-12 h-6 rounded-full transition-colors ${
+                isAvailable ? "bg-green-500" : "bg-gray-300"
+              }`}
+            >
+              <span
+                className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                  isAvailable ? "translate-x-6" : "translate-x-0"
+                }`}
+              />
+            </button>
           </div>
 
           <button

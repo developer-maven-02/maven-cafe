@@ -375,7 +375,7 @@ Maven Cafe Welcomes You 🌟
       className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col transition hover:shadow-md"
     >
       {/* Fixed Image Container - ensures consistent height */}
-    <div className="mx-4 mt-4 mb-2 rounded-2xl overflow-hidden bg-[#f7f9fc] aspect-square"   style={{ height: '176px' }}  // ← CRITICAL: Parent must have fixed height
+    <div className="mx-4 mt-4 mb-2 rounded-2xl overflow-hidden bg-[#f7f9fc] aspect-square relative"   style={{ height: '176px' }}  // ← CRITICAL: Parent must have fixed height
 >
 
     <img
@@ -384,6 +384,16 @@ Maven Cafe Welcomes You 🌟
       className="w-full h-full object-cover object-center"
       
     />
+{item.is_available === false && (
+  <div className="absolute top-3 left-0 z-10">
+    <div className="relative bg-red-500 text-white text-[10px] font-semibold px-4 py-1 shadow-md">
+      Not Available
+      
+      {/* Ribbon Tail */}
+      <span className="absolute right-[-10px] top-0 w-0 h-0 border-t-[14px] border-b-[14px] border-l-[10px] border-t-transparent border-b-transparent border-l-red-500"></span>
+    </div>
+  </div>
+)}
 
   </div>
 
@@ -414,9 +424,14 @@ Maven Cafe Welcomes You 🌟
             onClick={() =>
               router.push(`/screens/product/${item.id}`)
             }
-            className="bg-[#103c7f] text-white px-3 py-1.5 rounded-xl text-xs font-medium"
+            disabled={item.is_available === false}
+            className={`px-3 py-1.5 rounded-xl text-xs font-medium ${
+              item.is_available === false
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-[#103c7f] text-white"
+            }`}
           >
-            Order
+            {"Order"}
           </button>
         </div>
       </div>

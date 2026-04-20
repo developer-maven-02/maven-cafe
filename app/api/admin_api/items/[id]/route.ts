@@ -152,3 +152,56 @@ export async function DELETE(
     });
   }
 }
+
+export async function PATCH(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await context.params;
+
+    // ✅ Parse JSON (NOT formData)
+    const body = await req.json();
+    const { is_available } = body;
+
+    // ✅ Validation
+    if (typeof is_available !== "boolean") {
+      return NextResponse.json({
+        success: false,
+        message: "Invalid is_available value",
+      });
+    }
+
+    // ✅ Update only availability
+    const { data, error } = await supabaseServer
+      .from("items")
+      .update({
+        is_available,
+        updated_at: new Date(),
+      })
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) {
+      return NextResponse.json({
+        success: false,
+        message: error.message,
+      });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Availability updated successfully",
+      data,
+    });
+
+  } catch (err: any) {
+    console.error("PATCH Server error:", err);
+
+    return NextResponse.json({
+      success: false,
+      message: "Server error",
+    });
+  }
+}

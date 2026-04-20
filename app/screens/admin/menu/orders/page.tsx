@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Plus, Pencil, Trash2 } from "lucide-react";
 
-import { get, remove } from "@/lib/api";
+import { get, remove ,patch} from "@/lib/api";
 export default function FoodManagement() {
   const router = useRouter();
 
@@ -32,6 +32,28 @@ export default function FoodManagement() {
     setLoading(false);
   };
 
+const toggleAvailability = async (item: any) => {
+  try {
+    const updatedStatus = !item.is_available;
+
+    const res = await patch(`/admin_api/items/${item.id}`, {
+      is_available: updatedStatus,
+    });
+
+    if (res.success) {
+      setItems((prev: any[]) =>
+        prev.map((i) =>
+          i.id === item.id
+            ? { ...i, is_available: updatedStatus }
+            : i
+        )
+      );
+    }
+  } catch (err: any) {
+    console.error("Toggle error:", err);
+    alert(err?.message || "Failed to update availability");
+  }
+};
   // ✅ Delete item
   const deleteItem = async (id: string) => {
     const confirmDelete = confirm("Delete this item?");
@@ -93,36 +115,64 @@ export default function FoodManagement() {
           </p>
         ) : (
           items.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white rounded-xl p-4 shadow-sm flex justify-between items-center"
-            >
-              <p className="font-medium text-gray-800">
-                {item.name}
-              </p>
+           <div
+  key={item.id}
+  className="bg-white rounded-xl p-4 shadow-sm flex justify-between items-center"
+>
+  {/* Left */}
+  <div>
+    <p className="font-medium text-gray-800">{item.name}</p>
 
-              <div className="flex gap-2">
+    <p className="text-xs mt-1">
+      <span
+        className={`px-2 py-1 rounded-full ${
+          item.is_available
+            ? "bg-green-100 text-green-600"
+            : "bg-red-100 text-red-500"
+        }`}
+      >
+        {item.is_available ? "Available" : "Unavailable"}
+      </span>
+    </p>
+  </div>
 
-                <button
-                  onClick={() =>
-                    router.push(`/screens/admin/menu/orders/AddOrders/${item.id}`)
-                  }
-                  className="flex items-center gap-1 px-3 py-1 bg-gray-100 rounded-lg text-sm text-[#103c7f]"
-                >
-                  <Pencil size={14}/>
-                  Edit
-                </button>
+  {/* Right */}
+  <div className="flex items-center gap-3">
 
-                <button
-                  onClick={() => deleteItem(item.id)}
-                  className="flex items-center gap-1 px-3 py-1 bg-red-500 text-white rounded-lg text-sm"
-                >
-                  <Trash2 size={14}/>
-                  Delete
-                </button>
+    {/* 🔥 SWITCH */}
+    <div
+      onClick={() => toggleAvailability(item)}
+      className={`w-11 h-6 flex items-center rounded-full p-1 cursor-pointer transition ${
+        item.is_available ? "bg-green-500" : "bg-gray-300"
+      }`}
+    >
+      <div
+        className={`bg-white w-4 h-4 rounded-full shadow-md transform transition ${
+          item.is_available ? "translate-x-5" : ""
+        }`}
+      />
+    </div>
 
-              </div>
-            </div>
+    {/* Edit */}
+    <button
+      onClick={() =>
+        router.push(`/screens/admin/menu/orders/AddOrders/${item.id}`)
+      }
+      className="p-2 bg-gray-100 rounded-lg text-[#103c7f]"
+    >
+      <Pencil size={14} />
+    </button>
+
+    {/* Delete */}
+    <button
+      onClick={() => deleteItem(item.id)}
+      className="p-2 bg-red-500 text-white rounded-lg"
+    >
+      <Trash2 size={14} />
+    </button>
+
+  </div>
+</div>
           ))
         )}
 

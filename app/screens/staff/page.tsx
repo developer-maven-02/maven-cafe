@@ -8,8 +8,8 @@ import {
   XCircle,
   User, 
   Package, 
-  LogOut
-
+  LogOut,
+ Utensils  
 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
@@ -552,9 +552,17 @@ const formatRunningTime = (startTime?: string) => {
   </div>
 
   <div className="flex items-center gap-2">
+     <button
+    onClick={() => router.push("/screens/staff/items")}
+    className="p-1.5 rounded-lg hover:bg-gray-100"
+    title="Menu Items"
+  >
+    <Utensils size={18} className="text-[#103c7f]" />
+  </button>
     <button
       onClick={() => router.push("/screens/staff/orders")}
       className="p-1.5 rounded-lg hover:bg-gray-100"
+       title="Orders"
     >
       <ClipboardList size={18} className="text-[#103c7f]" />
     </button>
@@ -562,6 +570,7 @@ const formatRunningTime = (startTime?: string) => {
     <button
       onClick={() => router.push("/screens/staff/service-requests")}
       className="p-1.5 rounded-lg hover:bg-gray-100"
+      title="Services"
     >
       <Wrench size={18} className="text-[#103c7f]" />
     </button>
@@ -569,6 +578,7 @@ const formatRunningTime = (startTime?: string) => {
     <button
       onClick={() => router.push("/screens/staff/inventory")}
       className="p-1.5 rounded-lg hover:bg-gray-100"
+      title="inventory"
     >
       <Package size={18} className="text-[#103c7f]" />
     </button>
