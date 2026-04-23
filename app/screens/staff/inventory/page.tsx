@@ -6,7 +6,9 @@ import {
   LogOut,
   ClipboardList,
   Wrench,
-  ArrowLeft
+  ArrowLeft,
+  Minus,
+  Plus as PlusIcon
 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
@@ -38,9 +40,22 @@ const units = [
   "dozen",
   "tray",
 ];
+
+const getType = (unit: string) => {
+  return countableUnits.includes(unit)
+    ? "COUNTABLE"
+    : "MEASURABLE";
+};
+const isLowStock = (qty: number) => qty <= 0;
+
+const getItemStatus = (qty: number) => {
+  if (qty <= 0) return "OUT_OF_STOCK";
+  return "IN_STOCK";
+};
+const countableUnits = ["packet", "piece", "box", "bottle", "dozen", "tray"];
   const fetchInventoryRequests = async () => {
     try {
-      const result = await get("cafe_api/inventory_requests/my");
+      const result = await get("cafe_api/inventory_requests");
 
       if (result.success) {
         setInventoryRequests(result.data || []);
@@ -50,26 +65,79 @@ const units = [
     }
   };
 
-  const submitInventoryRequest = async () => {
-    try {
-      const result = await post("cafe_api/inventory_requests", inventoryForm);
+const updateStock = async (id: string, newQty: number) => {
+  try {
+    await post(`cafe_api/inventory_requests/${id}`, {
+      current_stock: newQty,
+      item_status: getItemStatus(newQty),
+    });
 
-      if (result.success) {
-        fetchInventoryRequests();
+    fetchInventoryRequests();
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-        setInventoryForm({
-          product_name: "",
-          quantity: "",
-          unit: "",
-          reason: "",
-        });
+const increaseQuantity = async (item: any) => {
+  const currentQty = item.current_stock ?? item.quantity;
+  await updateStock(item.id, currentQty - 1);
+};
 
-        setShowForm(false);
-      }
-    } catch (error) {
-      console.log(error);
+const decreaseQuantity = async (item: any) => {
+  const currentQty = item.current_stock ?? item.quantity;
+  if (currentQty > 0) {
+    await updateStock(item.id, currentQty + 1);
+  }
+};
+
+const submitInventoryRequest = async () => {
+  try {
+    const qty = Number(inventoryForm.quantity);
+
+    if (!inventoryForm.product_name || !inventoryForm.quantity || !inventoryForm.unit) {
+      alert("All fields required");
+      return;
     }
-  };
+
+    if (isNaN(qty) || qty <= 0) {
+      alert("Invalid quantity");
+      return;
+    }
+
+    const type = getType(inventoryForm.unit);
+
+    // 🚫 COUNTABLE validation
+    if (type === "COUNTABLE" && !Number.isInteger(qty)) {
+      alert("Only whole numbers allowed");
+      return;
+    }
+
+    const item_status = getItemStatus(qty);
+
+    const payload = {
+      ...inventoryForm,
+      type,
+      item_status, // 👈 added
+    };
+
+    const result = await post("cafe_api/inventory_requests", payload);
+
+    if (result.success) {
+      fetchInventoryRequests();
+
+      setInventoryForm({
+        product_name: "",
+        quantity: "",
+        unit: "",
+        reason: "",
+      });
+
+      setShowForm(false);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   const logout = async () => {
     await post("/auth/logout", {});
@@ -148,34 +216,60 @@ const units = [
       </div>
 
       {/* Inventory List */}
-  {/* Inventory List */}
 <div className="bg-white rounded-xl p-4 shadow-sm">
   <h2 className="text-[#103c7f] text-lg font-semibold mb-4">
     Inventory Requests
   </h2>
 
   {/* Table Header */}
-
-    {/* Table Header */}
-<div className="grid grid-cols-5 gap-3 border-b border-gray-200 pb-2 mb-2 text-sm text-gray-500 font-medium">
+<div className="grid grid-cols-6 gap-3 border-b border-gray-200 pb-2 mb-2 text-sm text-gray-500 font-medium">
   <div>Product Name</div>
   <div>Quantity</div>
   <div>Unit</div>
   <div>Reason</div>
   <div>Status</div>
+  <div className="col-span-1">Actions</div>
 </div>
 
 {/* Table Rows */}
 <div className="space-y-2">
-  {inventoryRequests.map((item) => (
+  {inventoryRequests.map((item) => {
+    const currentQty = item.current_stock ?? item.quantity;
+    const requestedQty = item.quantity;
+    const remainingStock = requestedQty - currentQty;
+    
+    return (
     <div
       key={item.id}
-      className="grid grid-cols-5 gap-3 p-2 items-center border border-gray-100 rounded-lg shadow-sm hover:shadow-md transition"
+      className="grid grid-cols-6 gap-3 p-2 items-center border border-gray-100 rounded-lg shadow-sm hover:shadow-md transition"
     >
       <div className="truncate font-medium text-[#103c7f]" title={item.product_name}>
         {item.product_name}
       </div>
-      <div>{item.quantity}</div>
+      <div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => decreaseQuantity(item)}
+            disabled={currentQty <= 0}
+            className={`p-1 rounded ${
+              currentQty <= 0 
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
+                : "bg-red-100 text-red-600 hover:bg-red-200"
+            }`}
+          >
+            <Minus size={16} />
+          </button>
+          <span className="font-semibold min-w-[40px] text-center">
+            {remainingStock}
+          </span>
+          <button
+            onClick={() => increaseQuantity(item)}
+            className="p-1 rounded bg-green-100 text-green-600 hover:bg-green-200"
+          >
+            <PlusIcon size={16} />
+          </button>
+        </div>
+      </div>
       <div>{item.unit}</div>
       <div className="truncate text-gray-500" title={item.reason}>
         {item.reason}
@@ -191,8 +285,27 @@ const units = [
           {item.status}
         </span>
       </div>
+
+      <div className="flex flex-wrap gap-1">
+        {remainingStock <= 0 && (
+          <button
+            onClick={() => {
+              setInventoryForm({
+                product_name: item.product_name,
+                quantity: item.quantity,
+                unit: item.unit,
+                reason: item.reason,
+              });
+              setShowForm(true);
+            }}
+            className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded"
+          >
+            Reorder
+          </button>
+        )}
+      </div>
     </div>
-  ))}
+  )})}
 </div>
 </div>
 

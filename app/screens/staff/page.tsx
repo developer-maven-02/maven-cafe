@@ -95,6 +95,7 @@ type Product = {
   price: number;
   stock: number;
   category: string;
+  is_available: boolean;
 };
 
 const [products, setProducts] = useState<Product[]>([]);
@@ -526,6 +527,9 @@ const formatRunningTime = (startTime?: string) => {
 
   return `${mins}m ${secs}s`;
 };
+
+  const availableCount = products.filter(p => p.is_available === true).length;
+const notAvailableCount = products.filter(p => p.is_available === false).length;
  return (
   <div className="h-screen overflow-hidden bg-gray-50 flex flex-col p-4">
 
@@ -606,7 +610,7 @@ const formatRunningTime = (startTime?: string) => {
     </p>
   </div>
 
-  <div className="grid grid-cols-4 gap-3">
+  <div className="grid grid-cols-6 gap-3">
     {/* Completed */}
     <div className="bg-white rounded-xl px-4 py-3 shadow-sm">
       <div className="flex items-center gap-2">
@@ -642,6 +646,25 @@ const formatRunningTime = (startTime?: string) => {
       </div>
       <p className="text-xl font-bold text-orange-500 mt-1">{cancelledServiceCount}</p>
     </div>
+   <div className="bg-white rounded-xl px-4 py-3 shadow-sm">
+  <div className="flex items-center gap-2">
+    <CheckCircle size={16} className="text-green-500" />
+    <p className="text-xs text-gray-600 font-medium">Available</p>
+  </div>
+  <p className="text-xl font-bold text-green-500 mt-1">
+    {availableCount}
+  </p>
+</div>
+
+<div className="bg-white rounded-xl px-4 py-3 shadow-sm">
+  <div className="flex items-center gap-2">
+    <XCircle size={16} className="text-red-500" />
+    <p className="text-xs text-gray-600 font-medium">Not Available</p>
+  </div>
+  <p className="text-xl font-bold text-red-500 mt-1">
+    {notAvailableCount}
+  </p>
+</div>
   </div>
 </div>
 

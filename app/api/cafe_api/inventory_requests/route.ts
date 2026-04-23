@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const { userId } = await verifyToken(req);
 
     // Get request body
-    const { product_name, quantity, unit, reason } = await req.json();
+    const { product_name, quantity, unit, reason, type, item_status} = await req.json();
 
     if (!product_name || !quantity) {
       return NextResponse.json(
@@ -42,6 +42,8 @@ export async function POST(req: Request) {
           quantity: Number(quantity),
           unit: unit || "",
           reason: reason || "",
+          type,
+          item_status,
           status: "Pending",
         },
       ])
