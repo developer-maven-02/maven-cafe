@@ -450,6 +450,23 @@ const handleReject = async () => {
   setSelectedOrderId(null);
 };
 
+const formatDateTime = (date?: string) => {
+  if (!date) return "-";
+
+  const d = new Date(date);
+
+  // add 5h 30m
+  const istDate = new Date(d.getTime() + 330 * 60 * 1000);
+
+  return istDate.toLocaleString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
 const updateServiceStatus = async (
   id: string,
   newStatus: string,
@@ -684,6 +701,7 @@ const notAvailableCount = products.filter(p => p.is_available === false).length;
             <th className="p-3">User</th>
             <th className="p-3">Seat</th>
             <th className="p-3">Status</th>
+            <th className="p-3">Date</th>
             <th className="p-3">Timer</th>
             <th className="p-3">Action</th>
           </tr>
@@ -714,7 +732,9 @@ const notAvailableCount = products.filter(p => p.is_available === false).length;
               <td className="p-3 text-black">{order.user_name}</td>
               <td className="p-3 text-black">{order.seat}</td>
               <td className="p-3 text-black">{order.status}</td>
-
+               <td className="p-3 text-gray-600">
+  {formatDateTime(order.created_at)}
+</td>
               <td className="p-3 text-green-600">
                 {order.start_time &&
                 ["Accepted", "Preparing", "Ready"].includes(order.status)
@@ -790,6 +810,7 @@ const notAvailableCount = products.filter(p => p.is_available === false).length;
             <th className="p-3">User</th>
             <th className="p-3">Seat</th>
             <th className="p-3">Status</th>
+            <th className="p-3">Date</th>
             <th className="p-3">Timer</th>
             <th className="p-3">Action</th>
           </tr>
@@ -811,7 +832,9 @@ const notAvailableCount = products.filter(p => p.is_available === false).length;
               <td className="p-3">{service.user_name}</td>
               <td className="p-3">{service.seat}</td>
               <td className="p-3">{service.status}</td>
-
+             <td className="p-3 ">
+  {formatDateTime(service.created_at)}
+</td>
               <td className="p-3 text-green-600">
                 {service.start_time && service.status === "Processing"
                   ? formatRunningTime(service.start_time)
