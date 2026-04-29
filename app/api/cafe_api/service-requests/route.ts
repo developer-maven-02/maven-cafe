@@ -1,13 +1,53 @@
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase-server";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const { data, error } = await supabaseServer
-  .from("customer_service_requests")
-  .select("*")
-  .in("status", ["Completed", "Rejected"])
-  .order("created_at", { ascending: false });
+    const { searchParams } = new URL(request.url);
+
+    const statusFilter = searchParams.get("status");
+    const searchTerm = searchParams.get("search");
+    const startDate = searchParams.get("start_date");
+    const endDate = searchParams.get("end_date");
+    const user = searchParams.get("user"); // ✅ ADD THIS
+
+    let query = supabaseServer
+      .from("customer_service_requests")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    // ✅ STATUS FILTER
+    if (statusFilter && statusFilter !== "all") {
+      query = query.eq("status", statusFilter);
+    } else {
+      query = query.in("status", ["Completed", "Rejected"]);
+    }
+
+    // ✅ USER FILTER (IMPORTANT)
+    if (user && user !== "all") {
+      query = query.eq("user_name", user);
+    }
+
+    // ✅ SEARCH FILTER
+    if (searchTerm) {
+      query = query.or(
+        `service.ilike.%${searchTerm}%,user_name.ilike.%${searchTerm}%`
+      );
+    }
+
+    // ✅ DATE RANGE FILTER
+    if (startDate && endDate) {
+      query = query
+        .gte("created_at", startDate)
+        .lte("created_at", endDate + "T23:59:59");
+    } else if (startDate) {
+      query = query.gte("created_at", startDate);
+    } else if (endDate) {
+      query = query.lte("created_at", endDate + "T23:59:59");
+    }
+
+    const { data, error } = await query;
+
     if (error) {
       return NextResponse.json({
         success: false,
