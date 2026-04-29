@@ -572,45 +572,47 @@ const notAvailableCount = products.filter(p => p.is_available === false).length;
     </div>
   </div>
 
-  <div className="flex items-center gap-2">
-     <button
-    onClick={() => router.push("/screens/staff/items")}
-    className="p-1.5 rounded-lg hover:bg-gray-100"
-    title="Menu Items"
-  >
-    <Utensils size={18} className="text-[#103c7f]" />
+<div className="flex items-center gap-6">
+
+  <button className="flex flex-col items-center justify-center px-3 py-2 rounded-xl bg-white hover:bg-[#103c7f]/10 transition group shadow-sm"  onClick={() => router.push("/screens/staff/items")}>
+    <Utensils size={18} className="text-gray-600 group-hover:text-[#103c7f]" />
+    <span className="text-xs text-gray-600 group-hover:text-[#103c7f]">
+      Items
+    </span>
   </button>
-    <button
-      onClick={() => router.push("/screens/staff/orders")}
-      className="p-1.5 rounded-lg hover:bg-gray-100"
-       title="Orders"
-    >
-      <ClipboardList size={18} className="text-[#103c7f]" />
-    </button>
 
-    <button
-      onClick={() => router.push("/screens/staff/service-requests")}
-      className="p-1.5 rounded-lg hover:bg-gray-100"
-      title="Services"
-    >
-      <Wrench size={18} className="text-[#103c7f]" />
-    </button>
+  <button onClick={() => router.push("/screens/staff/orders")} className="flex flex-col items-center justify-center px-3 py-2 rounded-xl bg-white hover:bg-[#103c7f]/10 transition group shadow-sm">
+    <ClipboardList size={18} className="text-gray-600 group-hover:text-[#103c7f]" />
+    <span className="text-xs text-gray-600 group-hover:text-[#103c7f]">
+      Orders
+    </span>
+  </button>
 
-    <button
-      onClick={() => router.push("/screens/staff/inventory")}
-      className="p-1.5 rounded-lg hover:bg-gray-100"
-      title="inventory"
-    >
-      <Package size={18} className="text-[#103c7f]" />
-    </button>
+  <button  onClick={() => router.push("/screens/staff/service-requests")} className="flex flex-col items-center justify-center px-3 py-2 rounded-xl bg-white hover:bg-[#103c7f]/10 transition group shadow-sm">
+    <Wrench size={18} className="text-gray-600 group-hover:text-[#103c7f]" />
+    <span className="text-xs text-gray-600 group-hover:text-[#103c7f]">
+      Services
+    </span>
+  </button>
 
-    <button
-      onClick={logout}
-      className="p-1.5 rounded-lg hover:bg-gray-100"
-    >
-      <LogOut size={18} className="text-red-500" />
-    </button>
-  </div>
+  <button  onClick={() => router.push("/screens/staff/inventory")} className="flex flex-col items-center justify-center px-3 py-2 rounded-xl bg-white hover:bg-[#103c7f]/10 transition group shadow-sm">
+    <Package size={18} className="text-gray-600 group-hover:text-[#103c7f]" />
+    <span className="text-xs text-gray-600 group-hover:text-[#103c7f]">
+      Inventory
+    </span>
+  </button>
+
+
+ <button  onClick={logout}
+  className="flex flex-col items-center text-xs text-red-600 
+  bg-red-50 hover:bg-red-100 
+  px-3 py-2 rounded-lg transition"
+>
+  <LogOut size={18} />
+  <span>Logout</span>
+</button>
+
+</div>
 </div>
 
    
