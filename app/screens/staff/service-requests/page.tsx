@@ -56,10 +56,11 @@ export default function ServiceRequests() {
 
         // ✅ Extract unique users
         const uniqueUsers = Array.from(
-          new Set(data.map((item: ServiceRequest) => item.user_name))
-        );
+    new Set(data.map((item: ServiceRequest) => item.user_name))
+  ) as string[];
 
-        setUsers(uniqueUsers);
+  setUsers(uniqueUsers);
+
       }
     } catch (error) {
       console.error("Service fetch error:", error);
