@@ -25,7 +25,7 @@ export default function EditMember() {
   const [password, setPassword] = useState("");
   const [profileImage, setProfileImage] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [teamType, setTeamType] = useState("Team B");
   useEffect(() => {
     fetchUser();
   }, []);
@@ -42,6 +42,7 @@ export default function EditMember() {
       setSeat(user.seat || "");
       setStatus(user.status || "active");
       setProfileImage(user.profile_image || "");
+      setTeamType(user.team_type || "Team B");
     }
   };
 
@@ -55,7 +56,8 @@ export default function EditMember() {
       seat,
       status,
       password,
-      profile_image: profileImage
+      profile_image: profileImage,
+       team_type: teamType,
     });
 
     if (res.success) {
@@ -110,6 +112,19 @@ export default function EditMember() {
             <option value="admin">Admin</option>
           </select>
         </div>
+
+        <div className="flex items-center gap-2 border rounded-lg p-3">
+  <Shield size={16} className="text-[#103c7f]" />
+
+  <select
+    value={teamType}
+    onChange={(e) => setTeamType(e.target.value)}
+    className="flex-1 outline-none"
+  >
+    <option value="Team A">Team A</option>
+    <option value="Team B">Team B</option>
+  </select>
+</div>
 
         <div className="flex items-center gap-2 border rounded-lg p-3">
           <MapPin size={16} className="text-[#103c7f]"/>

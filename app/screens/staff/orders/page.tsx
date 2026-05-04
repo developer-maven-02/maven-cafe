@@ -87,6 +87,20 @@ export default function IncomingOrders() {
       new Date(a.created_at || "").getTime()
   );
 
+const formatIST = (utcDate: string | Date): string => {
+  const date = new Date(utcDate);
+
+  const istTime = new Date(date.getTime() + 5.5 * 60 * 60 * 1000);
+
+  return istTime.toLocaleString("en-IN", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
   return (
     <div className="min-h-screen bg-[#f8fafc]">
 
@@ -251,11 +265,9 @@ export default function IncomingOrders() {
                     </span>
                   </td>
 
-                  <td className="px-4 py-3 text-xs text-gray-500">
-                    {order.created_at
-                      ? new Date(order.created_at).toLocaleString()
-                      : "-"}
-                  </td>
+                 <td className="px-4 py-3 text-xs text-gray-500">
+  {order.created_at ? formatIST(order.created_at) : "-"}
+</td>
                 </tr>
               ))}
             </tbody>

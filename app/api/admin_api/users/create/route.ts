@@ -12,7 +12,8 @@ export async function POST(req: Request) {
       role,
       seat,
       profile_image,
-      status
+      status,
+      team_type // ✅ NEW
     } = body;
 
     if (!name || !email || !password) {
@@ -48,7 +49,8 @@ export async function POST(req: Request) {
           role,
           seat,
           profile_image,
-          status
+          team_type,
+          status,
         }
       ]);
 

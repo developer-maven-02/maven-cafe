@@ -77,6 +77,24 @@ export default function ServiceRequests() {
       new Date(a.created_at || "").getTime()
   );
 
+  const formatIST = (utcDate?: string | Date): string => {
+  if (!utcDate) return "-";
+
+  const date = new Date(utcDate);
+  if (isNaN(date.getTime())) return "-";
+
+  const istTime = new Date(date.getTime() + 5.5 * 60 * 60 * 1000);
+
+  return istTime.toLocaleString("en-IN", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       {/* HEADER */}
@@ -222,11 +240,9 @@ export default function ServiceRequests() {
                     </span>
                   </td>
 
-                  <td className="px-4 py-3 text-xs text-gray-500">
-                    {req.created_at
-                      ? new Date(req.created_at).toLocaleString()
-                      : "-"}
-                  </td>
+                <td className="px-4 py-3 text-xs text-gray-500">
+  {formatIST(req.created_at)}
+</td>
 
                   <td className="px-4 py-3">
                     <button

@@ -2,9 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Plus, Pencil, Trash2, Search, X } from "lucide-react";
+import {
+  ArrowLeft,
+  Plus,
+  Pencil,
+  Trash2,
+  Search,
+  X,
+} from "lucide-react";
 
-import { get, remove ,patch} from "@/lib/api";
+import { get, remove, patch } from "@/lib/api";
+
 export default function FoodManagement() {
   const router = useRouter();
 
@@ -16,7 +24,6 @@ export default function FoodManagement() {
     item.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // ✅ Fetch food items
   useEffect(() => {
     fetchItems();
   }, []);
@@ -24,54 +31,68 @@ export default function FoodManagement() {
   const fetchItems = async () => {
     try {
       const result = await get("/admin_api/items");
-
       if (result.success) {
-        const foodItems = result.data;
-
-        setItems(foodItems);
+        setItems(result.data);
       }
     } catch (error) {
       console.log(error);
     }
-
     setLoading(false);
   };
 
-const toggleAvailability = async (item: any) => {
-  try {
-    const updatedStatus = !item.is_available;
+  // ✅ Toggle Team B visibility
+  const toggleItemType = async (item: any) => {
+    try {
+      const updatedValue = !item.item_type;
 
-    const res = await patch(`/admin_api/items/${item.id}`, {
-      is_available: updatedStatus,
-    });
+      const res = await patch(`/admin_api/items/${item.id}`, {
+        item_type: updatedValue,
+      });
 
-    if (res.success) {
-      setItems((prev: any[]) =>
-        prev.map((i) =>
-          i.id === item.id
-            ? { ...i, is_available: updatedStatus }
-            : i
-        )
-      );
+      if (res.success) {
+        setItems((prev) =>
+          prev.map((i) =>
+            i.id === item.id ? { ...i, item_type: updatedValue } : i
+          )
+        );
+      }
+    } catch (err) {
+      console.error(err);
     }
-  } catch (err: any) {
-    console.error("Toggle error:", err);
-    alert(err?.message || "Failed to update availability");
-  }
-};
-  // ✅ Delete item
-  const deleteItem = async (id: string) => {
-    const confirmDelete = confirm("Delete this item?");
+  };
 
-    if (!confirmDelete) return;
+  // ✅ Toggle Availability
+  const toggleAvailability = async (item: any) => {
+    try {
+      const updatedStatus = !item.is_available;
+
+      const res = await patch(`/admin_api/items/${item.id}`, {
+        is_available: updatedStatus,
+      });
+
+      if (res.success) {
+        setItems((prev) =>
+          prev.map((i) =>
+            i.id === item.id
+              ? { ...i, is_available: updatedStatus }
+              : i
+          )
+        );
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert("Failed to update");
+    }
+  };
+
+  // ✅ Delete
+  const deleteItem = async (id: string) => {
+    if (!confirm("Delete this item?")) return;
 
     try {
       const result = await remove(`admin_api/items/${id}`);
-
       if (result.success) {
         fetchItems();
-      } else {
-        alert(result.message);
       }
     } catch {
       alert("Delete failed");
@@ -83,13 +104,12 @@ const toggleAvailability = async (item: any) => {
 
       {/* Header */}
       <div className="sticky top-0 bg-white flex items-center justify-between p-4 shadow-sm">
-
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.back()}
             className="p-2 bg-gray-100 rounded-full text-[#103c7f]"
           >
-            <ArrowLeft size={18}/>
+            <ArrowLeft size={18} />
           </button>
 
           <h1 className="font-semibold text-lg text-[#103c7f]">
@@ -98,19 +118,23 @@ const toggleAvailability = async (item: any) => {
         </div>
 
         <button
-          onClick={() => router.push(`/screens/admin/menu/orders/AddOrders`)}
+          onClick={() =>
+            router.push(`/screens/admin/menu/orders/AddOrders`)
+          }
           className="flex items-center gap-1 bg-[#103c7f] text-white px-3 py-2 rounded-lg text-sm"
         >
-          <Plus size={16}/>
+          <Plus size={16} />
           Add
         </button>
-
       </div>
 
-      {/* Search Bar */}
+      {/* Search */}
       <div className="px-4 pb-2">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            size={16}
+          />
           <input
             type="text"
             placeholder="Search items..."
@@ -121,7 +145,7 @@ const toggleAvailability = async (item: any) => {
           {searchTerm && (
             <button
               onClick={() => setSearchTerm("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
             >
               <X size={16} />
             </button>
@@ -129,8 +153,8 @@ const toggleAvailability = async (item: any) => {
         </div>
       </div>
 
-      {/* Food List */}
-      <div className="p-4 space-y-3">
+      {/* List */}
+      <div className="p-4 space-y-4">
 
         {loading ? (
           <p className="text-center text-sm text-gray-500">
@@ -138,73 +162,123 @@ const toggleAvailability = async (item: any) => {
           </p>
         ) : filteredItems.length === 0 ? (
           <p className="text-center text-sm text-gray-500">
-            {searchTerm ? "No items found" : "No food items found"}
+            No items found
           </p>
         ) : (
           filteredItems.map((item) => (
-           <div
-  key={item.id}
-  className="bg-white rounded-xl p-4 shadow-sm flex justify-between items-center"
->
-  {/* Left */}
-  <div>
-    <p className="font-medium text-gray-800">{item.name}</p>
+            <div
+              key={item.id}
+              className="bg-white rounded-xl p-4 shadow-sm space-y-3"
+            >
 
-    <p className="text-xs mt-1">
-      <span
-        className={`px-2 py-1 rounded-full ${
-          item.is_available
-            ? "bg-green-100 text-green-600"
-            : "bg-red-100 text-red-500"
-        }`}
-      >
-        {item.is_available ? "Available" : "Unavailable"}
-      </span>
-    </p>
-  </div>
+              {/* Name */}
+              <p className="font-medium text-gray-800">
+                {item.name}
+              </p>
 
-  {/* Right */}
-  <div className="flex items-center gap-3">
+              {/* Status */}
+              <div className="flex gap-2 flex-wrap">
+                <span
+                  className={`px-2 py-1 text-xs rounded-full ${
+                    item.is_available
+                      ? "bg-green-100 text-green-600"
+                      : "bg-red-100 text-red-500"
+                  }`}
+                >
+                  {item.is_available
+                    ? "Available"
+                    : "Unavailable"}
+                </span>
 
-    {/* 🔥 SWITCH */}
-    <div
-      onClick={() => toggleAvailability(item)}
-      className={`w-11 h-6 flex items-center rounded-full p-1 cursor-pointer transition ${
-        item.is_available ? "bg-green-500" : "bg-gray-300"
-      }`}
-    >
-      <div
-        className={`bg-white w-4 h-4 rounded-full shadow-md transform transition ${
-          item.is_available ? "translate-x-5" : ""
-        }`}
-      />
-    </div>
+                <span
+                  className={`px-2 py-1 text-xs rounded-full ${
+                    item.item_type
+                      ? "bg-blue-100 text-blue-600"
+                      : "bg-gray-200 text-gray-500"
+                  }`}
+                >
+                  {item.item_type
+                    ? "Team B Visible"
+                    : "Team B Hidden"}
+                </span>
+              </div>
 
-    {/* Edit */}
-    <button
-      onClick={() =>
-        router.push(`/screens/admin/menu/orders/AddOrders/${item.id}`)
-      }
-      className="p-2 bg-gray-100 rounded-lg text-[#103c7f]"
-    >
-      <Pencil size={14} />
-    </button>
+              {/* Controls */}
+              <div className="flex items-center justify-between border-t pt-3">
 
-    {/* Delete */}
-    <button
-      onClick={() => deleteItem(item.id)}
-      className="p-2 bg-red-500 text-white rounded-lg"
-    >
-      <Trash2 size={14} />
-    </button>
+                {/* Toggles */}
+                <div className="flex gap-6">
 
-  </div>
-</div>
+                  {/* Availability */}
+                  <div className="flex flex-col items-center text-[10px] text-gray-500">
+                    <span>Available</span>
+                    <div
+                      onClick={() => toggleAvailability(item)}
+                      className={`w-10 h-5 flex items-center rounded-full p-1 cursor-pointer ${
+                        item.is_available
+                          ? "bg-green-500"
+                          : "bg-gray-300"
+                      }`}
+                    >
+                      <div
+                        className={`bg-white w-4 h-4 rounded-full transform ${
+                          item.is_available
+                            ? "translate-x-5"
+                            : ""
+                        }`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Team B */}
+                  <div className="flex flex-col items-center text-[10px] text-gray-500">
+                    <span>Team B</span>
+                    <div
+                      onClick={() => toggleItemType(item)}
+                      className={`w-10 h-5 flex items-center rounded-full p-1 cursor-pointer ${
+                        item.item_type
+                          ? "bg-blue-500"
+                          : "bg-gray-300"
+                      }`}
+                    >
+                      <div
+                        className={`bg-white w-4 h-4 rounded-full transform ${
+                          item.item_type
+                            ? "translate-x-5"
+                            : ""
+                        }`}
+                      />
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() =>
+                      router.push(
+                        `/screens/admin/menu/orders/AddOrders/${item.id}`
+                      )
+                    }
+                    className="p-2 bg-gray-100 rounded-lg text-[#103c7f]"
+                  >
+                    <Pencil size={14} />
+                  </button>
+
+                  <button
+                    onClick={() => deleteItem(item.id)}
+                    className="p-2 bg-red-500 text-white rounded-lg"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+
+              </div>
+            </div>
           ))
         )}
-
       </div>
-
     </div>
   );
 }

@@ -160,25 +160,38 @@ export async function PATCH(
   try {
     const { id } = await context.params;
 
-    // ✅ Parse JSON (NOT formData)
     const body = await req.json();
-    const { is_available } = body;
 
-    // ✅ Validation
-    if (typeof is_available !== "boolean") {
+    const { is_available, item_type } = body;
+
+    // ✅ Build dynamic update object
+    const updateData: any = {
+      updated_at: new Date(),
+    };
+
+    // ✅ Conditional updates
+    if (typeof is_available === "boolean") {
+      updateData.is_available = is_available;
+    }
+
+    if (typeof item_type === "boolean") {
+      updateData.item_type = item_type;
+    }
+
+    // ❌ If nothing valid sent
+    if (
+      updateData.is_available === undefined &&
+      updateData.item_type === undefined
+    ) {
       return NextResponse.json({
         success: false,
-        message: "Invalid is_available value",
+        message: "No valid fields provided",
       });
     }
 
-    // ✅ Update only availability
     const { data, error } = await supabaseServer
       .from("items")
-      .update({
-        is_available,
-        updated_at: new Date(),
-      })
+      .update(updateData)
       .eq("id", id)
       .select()
       .single();
@@ -192,7 +205,7 @@ export async function PATCH(
 
     return NextResponse.json({
       success: true,
-      message: "Availability updated successfully",
+      message: "Item updated successfully",
       data,
     });
 

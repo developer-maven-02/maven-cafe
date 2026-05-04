@@ -57,6 +57,7 @@ export default function MenuPage() {
   const [userRole, setUserRole] = useState("");
 const [profileImage, setProfileImage] = useState("https://i.pravatar.cc/150?img=12");
 const [orderCount, setOrderCount] = useState(0);
+const [teamType, setTeamType] = useState("");
 const fetchOrderCount = async () => {
   try {
     const result = await get("/orders/my");
@@ -80,7 +81,7 @@ const fetchOrderCount = async () => {
     if (result.success) {
       setUserRole(result.user.role);
       setProfileImage(result.user.profile_image); // 👈 add this
-
+      setTeamType(result.user.team_type);
     }
   } catch (error) {
     console.error(error);
@@ -122,6 +123,7 @@ const fetchOrderCount = async () => {
   }
 };
 
+
   const fetchMenu = async () => {
     try {
       const result = await get("/menu/items");
@@ -135,32 +137,59 @@ const fetchOrderCount = async () => {
     }
   };
 
-//  const filteredItems = items.filter((item: any) => {
-//     const matchesCategory = activeCategory === "All" || item.category === activeCategory;
-//     const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase());
-//     return matchesCategory && matchesSearch;
-//   });
-const filteredItems = items.filter((item: any) => {
-  const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase());
 
+// const filteredItems = items.filter((item: any) => {
+//   const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase());
+
+//   let matchesCategory = false;
+
+//   if (activeCategory === "All") {
+//     // ❌ Exclude priced items
+//     matchesCategory = Number(item.price) === 0;
+//   } 
+//   else if (activeCategory === "Special Item") {
+//     // ✅ Only priced items
+//     matchesCategory = Number(item.price) > 0;
+//   } 
+//   else {
+//     // ❌ Normal categories but exclude priced items
+//     matchesCategory =
+//       item.category === activeCategory && Number(item.price) === 0;
+//   }
+
+//   return matchesCategory && matchesSearch;
+// });
+
+const filteredItems = items.filter((item: any) => {
+  const matchesSearch = item.name
+    .toLowerCase()
+    .includes(search.toLowerCase());
+
+  // ✅ TEAM FILTER
+  let matchesTeam = true;
+
+  if (teamType === "Team B") {
+    matchesTeam = item.item_type === true;
+  }
+
+  // Existing category logic
   let matchesCategory = false;
 
   if (activeCategory === "All") {
-    // ❌ Exclude priced items
     matchesCategory = Number(item.price) === 0;
   } 
   else if (activeCategory === "Special Item") {
-    // ✅ Only priced items
     matchesCategory = Number(item.price) > 0;
   } 
   else {
-    // ❌ Normal categories but exclude priced items
     matchesCategory =
       item.category === activeCategory && Number(item.price) === 0;
   }
 
-  return matchesCategory && matchesSearch;
+  return matchesSearch && matchesCategory && matchesTeam;
 });
+
+
 
   const serviceIconMap = {
   Bell,

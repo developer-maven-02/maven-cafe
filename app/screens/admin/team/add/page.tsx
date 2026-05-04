@@ -26,7 +26,7 @@ export default function AddMember() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
+   const [teamType, setTeamType] = useState("Team B"); // default Team B
   const handleImage = (e: any) => {
     const file = e.target.files[0];
 
@@ -56,7 +56,8 @@ export default function AddMember() {
         role,
         seat,
         profile_image: image,
-        status
+        status,
+        team_type: teamType,
       });
 
       if (result.success) {
@@ -185,6 +186,18 @@ export default function AddMember() {
               <option value="admin">Admin</option>
             </select>
           </div>
+
+          <div className="flex items-center gap-2 border rounded-xl p-3">
+  <Shield size={16} className="text-gray-500"/>
+  <select
+    value={teamType}
+    onChange={(e) => setTeamType(e.target.value)}
+    className="flex-1 outline-none text-sm bg-transparent"
+  >
+    <option value="Team A">Team A</option>
+    <option value="Team B">Team B</option>
+  </select>
+</div>
 
           {/* Seat */}
           <div className="flex items-center gap-2 border rounded-xl p-3">

@@ -53,7 +53,8 @@ export async function PUT(
       seat,
       status,
       password,
-      profile_image
+      profile_image,
+      team_type,
     } = body;
 
     const updateData: any = {
@@ -63,6 +64,7 @@ export async function PUT(
       seat,
       status,
       profile_image,
+      team_type,
       updated_at: new Date()
     };
 
