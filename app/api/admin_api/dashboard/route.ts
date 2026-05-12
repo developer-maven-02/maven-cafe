@@ -48,13 +48,55 @@ export async function GET(req: Request) {
       .gte("created_at", start)
       .lte("created_at", end);
 
+       const { count: totalCategoryAUsers } = await supabaseServer
+      .from("users")
+      .select("*", { count: "exact", head: true })
+      .eq("team_type", "Team A");
+
+    // Category B Users
+    const { count: totalCategoryBUsers } = await supabaseServer
+      .from("users")
+      .select("*", { count: "exact", head: true })
+      .eq("team_type", "Team B");
+
+    // Active Users
+    const { count: activeUsers } = await supabaseServer
+      .from("users")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "active");
+
+    // Inactive Users
+    const { count: inactiveUsers } = await supabaseServer
+      .from("users")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "inactive");
+
+      const { count: totalCategoryAMenus } = await supabaseServer
+  .from("items")
+  .select("*", { count: "exact", head: true })
+  .eq("is_available", true)
+  
+
+// Category B Menu Items
+const { count: totalCategoryBMenus } = await supabaseServer
+  .from("items")
+  .select("*", { count: "exact", head: true })
+  .eq("is_available", true)
+  .eq("item_type", true);
+
     return NextResponse.json({
       success: true,
       data: {
         totalOrders: totalOrders || 0,
         completedOrders: completedOrders || 0,
         totalRequests: totalRequests || 0,
-        completedRequests: completedRequests || 0
+        completedRequests: completedRequests || 0,
+        totalCategoryAUsers: totalCategoryAUsers || 0,
+        totalCategoryBUsers: totalCategoryBUsers || 0,
+        activeUsers: activeUsers || 0,
+        inactiveUsers: inactiveUsers || 0,
+        totalCategoryBMenus: totalCategoryBMenus || 0,
+        totalCategoryAMenus: totalCategoryAMenus || 0,
       }
     });
 

@@ -28,6 +28,19 @@ export async function POST(req: Request) {
       .select("*")
       .eq("id", data.user.id)
       .single();
+      if (!user?.status || user.status !== "active") {
+
+  // optional logout from supabase session
+  await supabase.auth.signOut();
+
+  return NextResponse.json(
+    {
+      success: false,
+      message: "Your account is inactive. Please contact admin."
+    },
+    { status: 200 }
+  );
+}
 
     const token = jwt.sign(
       {

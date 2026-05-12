@@ -26,7 +26,16 @@ export default function AdminDashboard() {
     totalOrders: 0,
     completedOrders: 0,
     totalRequests: 0,
-    completedRequests: 0
+    completedRequests: 0,
+      totalMenus: 0,
+
+  totalCategoryAUsers: 0,
+  totalCategoryBUsers: 0,
+  totalCategoryBMenus: 0,
+  totalCategoryAMenus: 0,
+
+  activeUsers: 0,
+  inactiveUsers: 0
   });
 
   const fetchDashboard = async () => {
@@ -67,7 +76,24 @@ export default function AdminDashboard() {
       label: "Completed Requests",
       value: dashboardData.completedRequests,
       icon: CheckCircle
-    }
+    },
+     {
+    label: "Menu Items",
+    icon: UtensilsCrossed
+  },
+
+  // CATEGORY CARD
+  {
+    label: "A / B Users",
+    icon: Users
+  },
+
+  // ACTIVE / INACTIVE CARD
+  {
+    label: "Users Status",
+    icon: User
+  }
+  
   ];
 
   const actions = [
@@ -170,6 +196,131 @@ export default function AdminDashboard() {
       <div className="p-4 grid grid-cols-2 gap-4">
         {stats.map((stat, i) => {
           const Icon = stat.icon;
+
+          // MENU ITEMS CARD
+if (stat.label === "A / B Users") {
+  return (
+    <div
+      key={i}
+      className="bg-white rounded-xl shadow-sm overflow-hidden"
+    >
+      <div className="flex items-center gap-2 p-3 border-b">
+        <Icon size={18} className="text-[#103c7f]" />
+
+        <p className="text-sm font-semibold text-gray-700">
+        Users Catergory
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2">
+        {/* Active */}
+        <div className="p-4 text-center border-r bg-green-50">
+          <p className="text-xs text-gray-500">
+            A
+          </p>
+
+          <h2 className="text-2xl font-bold text-green-700 mt-1">
+            {dashboardData.totalCategoryAUsers}
+          </h2>
+        </div>
+
+        {/* Inactive */}
+        <div className="p-4 text-center bg-red-50">
+          <p className="text-xs text-gray-500">
+            B
+          </p>
+
+          <h2 className="text-2xl font-bold text-red-600 mt-1">
+            {dashboardData.totalCategoryBUsers}
+          </h2>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+if (stat.label === "Menu Items") {
+  return (
+    <div
+      key={i}
+      className="bg-white rounded-xl shadow-sm overflow-hidden"
+    >
+      <div className="flex items-center gap-2 p-3 border-b">
+        <Icon size={18} className="text-[#103c7f]" />
+
+        <p className="text-sm font-semibold text-gray-700">
+          Menu Items
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2">
+        {/* Active */}
+        <div className="p-4 text-center border-r bg-green-50">
+          <p className="text-xs text-gray-500">
+            A
+          </p>
+
+          <h2 className="text-2xl font-bold text-green-700 mt-1">
+            {dashboardData.totalCategoryAMenus}
+          </h2>
+        </div>
+
+        {/* Inactive */}
+        <div className="p-4 text-center bg-red-50">
+          <p className="text-xs text-gray-500">
+            B
+          </p>
+
+          <h2 className="text-2xl font-bold text-red-600 mt-1">
+            {dashboardData.totalCategoryBMenus}
+          </h2>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ACTIVE / INACTIVE CARD
+if (stat.label === "Users Status") {
+  return (
+    <div
+      key={i}
+      className="bg-white rounded-xl shadow-sm overflow-hidden"
+    >
+      <div className="flex items-center gap-2 p-3 border-b">
+        <Icon size={18} className="text-[#103c7f]" />
+
+        <p className="text-sm font-semibold text-gray-700">
+          Users Status
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2">
+        {/* Active */}
+        <div className="p-4 text-center border-r bg-green-50">
+          <p className="text-xs text-gray-500">
+            Active
+          </p>
+
+          <h2 className="text-2xl font-bold text-green-700 mt-1">
+            {dashboardData.activeUsers}
+          </h2>
+        </div>
+
+        {/* Inactive */}
+        <div className="p-4 text-center bg-red-50">
+          <p className="text-xs text-gray-500">
+            Inactive
+          </p>
+
+          <h2 className="text-2xl font-bold text-red-600 mt-1">
+            {dashboardData.inactiveUsers}
+          </h2>
+        </div>
+      </div>
+    </div>
+  );
+}
 
           return (
             <div
